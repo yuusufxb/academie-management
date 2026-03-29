@@ -1,0 +1,85 @@
+/* ── Shared styles ── */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+.glass-header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+}
+.hero-gradient {
+  background: linear-gradient(135deg, #000000 0%, #101b30 100%);
+}
+
+/* ── Sidebar ── */
+.sidebar-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px; border-radius: 8px;
+  font-size: 13.5px; font-weight: 500; color: #64748b;
+  cursor: pointer; transition: all .15s;
+  border-right: 3px solid transparent;
+  text-decoration: none; font-family: 'Tajawal', sans-serif;
+}
+.sidebar-link:hover { color: #0f172a; background: #f1f5f9; }
+.sidebar-link.active {
+  color: #065f46; background: #f0fdf4;
+  border-right-color: #059669; font-weight: 700;
+}
+.sidebar-label {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: #94a3b8; padding: 12px 14px 4px;
+  font-weight: 700; display: block; font-family: 'Tajawal', sans-serif;
+}
+.sidebar-count {
+  margin-right: auto; background: #dcfce7; color: #166534;
+  font-size: 10px; font-weight: 800; padding: 1px 7px; border-radius: 100px;
+}
+
+/* ── Data table ── */
+.data-table { width: 100%; border-collapse: collapse; font-family: 'Tajawal', sans-serif; }
+.data-table th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .7px;
+  color: #64748b; font-weight: 700; padding: 10px 14px;
+  text-align: right; border-bottom: 2px solid #f1f5f9;
+}
+.data-table td {
+  padding: 11px 14px; font-size: 13.5px;
+  border-bottom: 1px solid #f8fafc; color: #0f172a; vertical-align: middle;
+}
+.data-table tr:hover td { background: #fafafa; }
+
+/* ── Icon action buttons ── */
+.icon-action {
+  width: 28px; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 13px; border: none; transition: all .15s;
+}
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 9px; border-radius: 100px;
+  font-size: 10.5px; font-weight: 700; white-space: nowrap;
+  font-family: 'Tajawal', sans-serif;
+}
+
+/* ── Form controls ── */
+.form-ctrl {
+  width: 100%; padding: 10px 13px; border-radius: 6px;
+  border: 1.5px solid #e2e8f0; font-size: 14px; color: #0f172a;
+  background: #fff; outline: none; transition: border-color .18s;
+  text-align: right; font-family: 'Tajawal', sans-serif;
+}
+.form-ctrl:focus { border-color: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,.08); }
+textarea.form-ctrl { height: 90px; resize: vertical; }
+
+/* ── Photo grid ── */
+.photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.photo-thumb {
+  height: 110px;
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  display: flex; align-items: center; justify-content: center; font-size: 36px;
+}
+
+/* ── RTL fix ── */
+[dir="rtl"] .hover\:translate-x-1:hover { transform: translateX(-4px) !important; }
