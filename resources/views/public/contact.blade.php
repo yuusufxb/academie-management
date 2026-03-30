@@ -18,7 +18,7 @@
         </div>
         <div class="flex items-start gap-4">
           <div class="bg-secondary/10 p-3 rounded-md text-secondary"><span class="material-symbols-outlined">language</span></div>
-          <div><p class="font-headline font-bold text-slate-900">الموقع الرسمي</p><p class="text-on-surface-variant text-sm">www.aref-souss-massa.ma</p></div>
+          <div><p class="font-headline font-bold text-slate-900">الموقع الرسمي</p><p class="text-on-surface-variant text-sm">http://arefsm.duckdns.org:8008/ecom</p></div>
         </div>
       </div>
       <div class="h-52 rounded-xl overflow-hidden shadow-sm bg-surface-container mt-8 flex items-center justify-center">
