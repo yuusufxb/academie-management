@@ -24,12 +24,9 @@ class LoginController extends Controller
         ]);
 
         $credentials = [
-            'name'     => $request->username, // adjust to your User model field
+            'name'     => $request->username,
             'password' => $request->password,
         ];
-
-        // Use email field if that's what your users table has:
-        // $credentials = ['email' => $request->username, 'password' => $request->password];
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();

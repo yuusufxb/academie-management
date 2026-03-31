@@ -95,13 +95,13 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('messages');
-        Schema::dropIfExists('magazine_editions');
-        Schema::dropIfExists('initiatives');
-        Schema::dropIfExists('council_sessions');
-        Schema::dropIfExists('press_clippings');
-        Schema::dropIfExists('videos');
-        Schema::dropIfExists('photos');
-        Schema::dropIfExists('activities');
+        // Schema::dropIfExists('messages');
+        // Schema::dropIfExists('magazine_editions');
+        // Schema::dropIfExists('initiatives');
+        // Schema::dropIfExists('council_sessions');
+        // Schema::dropIfExists('press_clippings');
+        // Schema::dropIfExists('videos');
+        // Schema::dropIfExists('photos');
+        // Schema::dropIfExists('activities');
     }
 };
