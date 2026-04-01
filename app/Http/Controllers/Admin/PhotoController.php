@@ -7,3 +7,4 @@ class PhotoController extends Controller {
         return view('admin.photos', compact('photos'));
     }
 }
+    

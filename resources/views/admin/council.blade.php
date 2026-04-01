@@ -4,7 +4,7 @@
 @section('content')
 <div class="flex items-center justify-between mb-4">
   <h2 class="font-headline text-xl font-black text-slate-900">تتبع المجلس الإداري</h2>
-  <button class="bg-secondary text-white px-4 py-2 rounded-md text-sm font-bold active:scale-95">إضافة مجلس جديد</button>
+  <a href="{{ route('admin.council.create') }}" class="bg-secondary text-white px-4 py-2 rounded-md text-sm font-bold active:scale-95">إضافة مجلس جديد</a>
 </div>
 <div class="bg-surface-container-lowest rounded-md overflow-hidden">
   <table class="data-table">
@@ -24,9 +24,9 @@
           <td>{{ $date }}</td>
           <td>{{ $place }}</td>
           <td><div class="flex gap-1">
-            <button class="icon-action" style="background:#dbeafe;color:#1d4ed8"><span class="material-symbols-outlined text-sm">search</span></button>
-            <button class="icon-action" style="background:#fef3c7;color:#b45309"><span class="material-symbols-outlined text-sm">edit</span></button>
-            <button class="icon-action" style="background:#fee2e2;color:#b91c1c"><span class="material-symbols-outlined text-sm">delete</span></button>
+            <a href="{{ route('admin.council.show', $id) }}" class="icon-action" style="background:#dbeafe;color:#1d4ed8"><span class="material-symbols-outlined text-sm">search</span></a>
+            <a href="{{ route('admin.council.edit', $id) }}" class="icon-action" style="background:#fef3c7;color:#b45309"><span class="material-symbols-outlined text-sm">edit</span></a>
+            <a class="icon-action" style="background:#fee2e2;color:#b91c1c"><span class="material-symbols-outlined text-sm">delete</span></a>
           </div></td>
         </tr>
       @endforeach

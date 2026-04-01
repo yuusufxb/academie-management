@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'صندوق الرسائل')
 @section('page-title', 'صندوق الرسائل')
-
 @section('content')
 <h2 class="font-headline text-xl font-black text-slate-900 mb-4">تتبع الرسائل الواردة</h2>
 <div class="bg-surface-container-lowest rounded-md p-5">
@@ -9,13 +8,14 @@
   <div class="divide-y divide-slate-50">
     @php
       $messages = [
-        ['name'=>'مدير مدرسة اكيدار الجديدة','subject'=>'طلب كيفية ادخال الصور للانشطة','status'=>'مسجل','status_class'=>'bg-slate-200 text-slate-600','bg'=>'bg-amber-50/50','date'=>'2024-10-07','attach'=>true],
-        ['name'=>'مدير مدرسة اكيدار الجديدة','subject'=>'كيفية اضافة صور الانشطة','status'=>'جديد','status_class'=>'bg-red-100 text-red-600','bg'=>'bg-red-50/50','date'=>'2024-06-09','attach'=>true],
-        ['name'=>'محمد','subject'=>'كرابيزم','status'=>'جديد','status_class'=>'bg-red-100 text-red-600','bg'=>'bg-red-50/50','date'=>'2024-06-09','attach'=>false],
-        ['name'=>'حسن الديب مدير تيزنيت','subject'=>'صعوبة الولوج الى منصة انشطتي','status'=>'جديد','status_class'=>'bg-red-100 text-red-600','bg'=>'bg-red-50/50','date'=>'2024-06-01','attach'=>true],
+        ['id'=>1,'name'=>'مدير مدرسة اكيدار الجديدة','subject'=>'طلب كيفية ادخال الصور للانشطة','status'=>'مسجل','status_class'=>'bg-slate-200 text-slate-600','bg'=>'bg-amber-50/50','date'=>'2024-10-07','attach'=>true],
+        ['id'=>2,'name'=>'مدير مدرسة اكيدار الجديدة','subject'=>'كيفية اضافة صور الانشطة','status'=>'جديد','status_class'=>'bg-red-100 text-red-600','bg'=>'bg-red-50/50','date'=>'2024-06-09','attach'=>true],
+        ['id'=>3,'name'=>'محمد','subject'=>'كرابيزم','status'=>'جديد','status_class'=>'bg-red-100 text-red-600','bg'=>'bg-red-50/50','date'=>'2024-06-09','attach'=>false],
+        ['id'=>4,'name'=>'حسن الديب مدير تيزنيت','subject'=>'صعوبة الولوج الى منصة انشطتي','status'=>'جديد','status_class'=>'bg-red-100 text-red-600','bg'=>'bg-red-50/50','date'=>'2024-06-01','attach'=>true],
       ];
     @endphp
     @foreach($messages as $i => $msg)
+     <a href="{{ route('admin.messages.show', $msg['id']) }}" class="block">
       <div class="flex items-start gap-3 py-3 hover:bg-slate-50 rounded-md px-2 cursor-pointer {{ $msg['bg'] }}">
         <span class="text-amber-400">⭐</span>
         <div class="flex-1">
@@ -27,6 +27,7 @@
           <p class="text-[11px] text-slate-400 mt-1">{{ $msg['attach'] ? '📎 ' : '' }}{{ $msg['date'] }}</p>
         </div>
       </div>
+     </a>
     @endforeach
   </div>
 </div>

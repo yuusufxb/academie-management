@@ -20,7 +20,7 @@ class PublicController extends Controller
 
     public function activityShow($id)
     {
-        abort(404);
+        return view('public.activity-show');
     }
 
     public function media()

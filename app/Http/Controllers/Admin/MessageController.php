@@ -1,20 +1,26 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
-class UserController extends Controller
+
+class MessageController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
-        $users = collect([]);
-        return view('admin.users', compact('users'));
+        return view('admin.messages');
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('admin.user-form'); 
+        //
     }
 
     /**
@@ -30,7 +36,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return view('admin.user-show');
+        return view('admin.message-show');
     }
 
     /**
@@ -39,7 +45,6 @@ class UserController extends Controller
     public function edit(string $id)
     {
         //
-        
     }
 
     /**

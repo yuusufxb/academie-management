@@ -5,7 +5,7 @@
 <h2 class="font-headline text-xl font-black text-slate-900 mb-4">إدارة المستخدمين</h2>
 <div class="flex gap-3 mb-4">
   <input placeholder="بحث..." class="flex-1 bg-white border border-slate-200 rounded-md px-4 py-2.5 text-sm focus:ring-2 focus:ring-secondary/20 text-right font-body"/>
-  <button class="bg-secondary text-white px-4 py-2 rounded-md text-sm font-bold">إنشاء</button>
+  <a href="{{ route('admin.users.create') }}" class="bg-secondary text-white px-4 py-2 rounded-md text-sm font-bold">إنشاء</a>
   <button class="border border-outline-variant text-primary px-4 py-2 rounded-md text-sm font-bold">تصدير (.xlsx)</button>
 </div>
 <div class="bg-surface-container-lowest rounded-md overflow-hidden">

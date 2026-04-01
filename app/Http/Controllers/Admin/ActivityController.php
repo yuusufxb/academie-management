@@ -38,12 +38,12 @@ class ActivityController extends Controller
 
     public function show($id)
     {
-        abort(404);
+        return view('admin.activities.show');
     }
 
     public function edit($id)
     {
-        abort(404);
+        return view('admin.activities.edit');
     }
 
     public function update(Request $request, $id)
