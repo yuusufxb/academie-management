@@ -12,12 +12,7 @@
   <a href="{{ route('admin.activities.index') }}" class="sidebar-link {{ request()->routeIs('admin.activities.index') ? 'active' : '' }}">
     <span class="material-symbols-outlined text-base">format_list_bulleted</span>لائحة الأنشطة
   </a>
-  <a href="{{ route('admin.activities.programmed') }}" class="sidebar-link {{ request()->routeIs('admin.activities.programmed') ? 'active' : '' }}">
-    <span class="material-symbols-outlined text-base">calendar_month</span>الأنشطة المبرمجة
-  </a>
-  <a href="{{ route('admin.activities.schedule') }}" class="sidebar-link {{ request()->routeIs('admin.activities.schedule') ? 'active' : '' }}">
-    <span class="material-symbols-outlined text-base">bookmark</span>برمجة النشاط
-  </a>
+  
   <a href="{{ route('admin.activities.create') }}" class="sidebar-link {{ request()->routeIs('admin.activities.create') ? 'active' : '' }}">
     <span class="material-symbols-outlined text-base">add_circle</span>إضافة نشاط جديد
   </a>
@@ -48,9 +43,9 @@
 
   <div class="border-t border-slate-100 my-2 mx-3"></div>
   <span class="sidebar-label">النظام</span>
-  <a href="{{ route('admin.watermark') }}" class="sidebar-link {{ request()->routeIs('admin.watermark') ? 'active' : '' }}">
+  {{-- <a href="{{ route('admin.watermark') }}" class="sidebar-link {{ request()->routeIs('admin.watermark') ? 'active' : '' }}">
     <span class="material-symbols-outlined text-base">settings</span>وحدة التحكم
-  </a>
+  </a> --}}
   <a href="{{ route('admin.messages') }}" class="sidebar-link {{ request()->routeIs('admin.messages') ? 'active' : '' }}">
     <span class="material-symbols-outlined text-base">mail</span>صندوق الرسائل
     <span class="sidebar-count">3</span>

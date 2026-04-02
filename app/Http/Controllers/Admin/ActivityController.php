@@ -68,27 +68,5 @@ class ActivityController extends Controller
             ->with('success', 'تم حذف النشاط.');
     }
 
-    public function programmed()
-    {
-        $programmed = collect([]);
-        return view('admin.activities.programmed', compact('programmed'));
-    }
-
-    public function scheduleForm()
-    {
-        $activities = collect([]);
-        return view('admin.activities.schedule', compact('activities'));
-    }
-
-    public function scheduleStore(Request $request)
-    {
-        $request->validate([
-            'activity_id'    => 'required|exists:activities,id',
-            'scheduled_date' => 'required|date',
-        ]);
-
-
-        return redirect()->route('admin.activities.programmed')
-            ->with('success', 'تمت برمجة النشاط بنجاح.');
-    }
+   
 }

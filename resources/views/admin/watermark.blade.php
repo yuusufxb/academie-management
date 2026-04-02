@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+{{-- @extends('layouts.admin')
 @section('title', 'وحدة التحكم')
 @section('page-title', 'وحدة التحكم')
 @section('content')
@@ -24,4 +24,4 @@
     @endforeach
   </div>
 </div>
-@endsection
+@endsection --}}

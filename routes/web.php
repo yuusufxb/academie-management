@@ -52,9 +52,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     // Activities (full CRUD + extras)
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
-    Route::get('/activities/programmed', [ActivityController::class, 'programmed'])->name('activities.programmed');
-    Route::get('/activities/schedule', [ActivityController::class, 'scheduleForm'])->name('activities.schedule');
-    Route::post('/activities/schedule', [ActivityController::class, 'scheduleStore'])->name('activities.schedule.store');
     Route::get('/activities/create', [ActivityController::class, 'create'])->name('activities.create');
     Route::post('/activities', [ActivityController::class, 'store'])->name('activities.store');
     Route::get('/activities/{id}', [ActivityController::class, 'show'])->name('activities.show');
@@ -130,7 +127,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/messages/{id}', [MessageController::class, 'show'])->name('messages.show');
 
     // System
-    Route::get('/watermark', [DashboardController::class, 'watermark'])->name('watermark');
+    // Route::get('/watermark', [DashboardController::class, 'watermark'])->name('watermark');
     Route::get('/messages', [DashboardController::class, 'messages'])->name('messages');
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::post('/account/password', [AccountController::class, 'changePassword'])->name('account.password');
