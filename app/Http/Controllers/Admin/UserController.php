@@ -39,6 +39,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         //
+        return view('admin.user-edit');
         
     }
 

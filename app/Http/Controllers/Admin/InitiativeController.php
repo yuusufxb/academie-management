@@ -23,6 +23,7 @@ class InitiativeController extends Controller {
     public function edit(string $id)
     {
         //
+        return view('admin.initiative-edit');
         
     }
 
