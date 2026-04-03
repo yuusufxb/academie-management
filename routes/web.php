@@ -25,7 +25,9 @@ Route::get('/activities', [PublicController::class, 'activities'])->name('activi
 Route::get('/activities/{id}', [PublicController::class, 'activityShow'])->name('activities.show');
 Route::get('/media', [PublicController::class, 'media'])->name('media');
 Route::get('/initiatives', [PublicController::class, 'initiatives'])->name('initiatives');
+Route::get('/initiatives/{id}', [PublicController::class, 'initiativeShow'])->name('initiatives.show');
 Route::get('/council', [PublicController::class, 'council'])->name('council');
+Route::get('/council/{id}', [PublicController::class, 'councilShow'])->name('council.show');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
 Route::post('/contact', [PublicController::class, 'contactSend'])->name('contact.send');
 

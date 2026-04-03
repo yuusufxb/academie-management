@@ -33,9 +33,19 @@ class PublicController extends Controller
         return view('public.initiatives');
     }
 
+    public function initiativeShow($id)
+    {
+        return view('public.initiative-show');
+    }
+    
+
     public function council()
     {
         return view('public.council');
+    }
+    public function councilShow($id)
+    {
+        return view('public.council-show');
     }
 
     public function contact()
