@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('qossassas', function (Blueprint $table) {
-            $table->id();
-            $table->string('journal');
-            $table->date('dte');
-            $table->string('titre');
-            $table->string('lien');
-            $table->string('photo')->nullable();
-            $table->text('txt')->nullable();
-            $table->timestamps()->nullable();
-        });
+       Schema::create('qossassas', function (Blueprint $table) {
+    $table->id();
+    $table->string('journal');
+    $table->date('dte');
+    $table->string('titre');
+    $table->string('lien');
+    $table->string('photo')->nullable();
+    $table->text('txt')->nullable();
+    $table->timestamps();
+});
     }
 
     /**

@@ -1,9 +1,17 @@
-<?php namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
+<?php
 
-class PressController extends Controller {
-    public function index() {
-        $clippings = collect([]);
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Qossassa;
+
+class PressController extends Controller
+{
+    public function index()
+    {
+        $clippings = \App\Models\Qossassa::latest('dte')->get();
+
         return view('admin.press', compact('clippings'));
     }
 
@@ -12,44 +20,71 @@ class PressController extends Controller {
         return view('admin.press-form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'journal' => 'required|string|max:255',
+            'dte'     => 'required|date',
+            'titre'   => 'required|string|max:255',
+            'lien'    => 'nullable|url',
+            'photo'   => 'nullable|image|max:5120',
+            'txt'     => 'nullable|string',
+        ]);
+
+        $data['gre'] = 1;
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('press', 'public');
+        }
+
+        Qossassa::create($data);
+
+        return redirect()->route('admin.press')
+           ->with('success', 'تمت إضافة القصاصة بنجاح');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        return view('admin.press-show');
+        $clipping = Qossassa::findOrFail($id);
+
+        return view('admin.press-show', compact('clipping'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit($id)
     {
-        return view('admin.press-edit');
-        
+        $clipping = Qossassa::findOrFail($id);
+
+        return view('admin.press-edit', compact('clipping'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $clipping = Qossassa::findOrFail($id);
+
+        $data = $request->validate([
+            'journal' => 'required|string|max:255',
+            'dte'     => 'required|date',
+            'titre'   => 'required|string|max:255',
+            'lien'    => 'nullable|url',
+            'photo'   => 'nullable|image|max:5120',
+            'txt'     => 'nullable|string',
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('press', 'public');
+        }
+
+        $clipping->update($data);
+
+        return redirect()->route('admin.press')
+            ->with('success', 'تم التحديث');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $clipping = Qossassa::findOrFail($id);
+        $clipping->delete();
+
+        return back()->with('success', 'تم الحذف');
     }
 }

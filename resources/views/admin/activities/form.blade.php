@@ -3,9 +3,9 @@
 @section('page-title', isset($activity) ? 'تعديل النشاط' : 'إضافة نشاط جديد')
 
 @section('content')
-<div class="max-w-4xl">
+<div class="max-w-4xl" dir="rtl">
 
-  <h2 class="font-headline text-xl font-black text-slate-900 mb-6">
+  <h2 class="font-headline text-xl font-black text-slate-900 mb-6 text-right">
     {{ isset($activity) ? 'تعديل النشاط' : 'إضافة نشاط جديد' }}
   </h2>
 
@@ -19,7 +19,7 @@
 
     {{-- ERRORS --}}
     @if($errors->any())
-      <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+      <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm font-bold text-right">
         <ul class="list-disc list-inside space-y-1">
           @foreach($errors->all() as $e)
             <li>{{ $e }}</li>
@@ -29,101 +29,101 @@
     @endif
 
     {{-- بيانات النشاط --}}
-    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 pb-3 border-b border-slate-100">
+    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 pb-3 border-b border-slate-100 text-right">
       بيانات النشاط
     </p>
 
     <div class="grid grid-cols-2 gap-4">
 
       {{-- نوع النشاط --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">نوع النشاط *</label>
-        <select name="type" class="form-ctrl">
-          @foreach(['احتفال','ورشة','مسابقة','رياضة','لقاء','دورة تكوينية','نشاط آخر'] as $t)
-            <option {{ old('type', $activity->type ?? '') == $t ? 'selected' : '' }}>
-              {{ $t }}
+        <select name="typ" class="form-ctrl w-full">
+          @foreach($categories as $cat)
+            <option value="{{ $cat->id }}" {{ old('typ', $activity->typ ?? '') == $cat->id ? 'selected' : '' }}>
+              {{ $cat->caty }}
             </option>
           @endforeach
         </select>
       </div>
 
       {{-- التاريخ --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">تاريخه *</label>
-        <input name="date" type="date"
-               value="{{ old('date', $activity->date ?? '') }}"
-               class="form-ctrl"/>
+        <input name="dte" type="date"
+               value="{{ old('dte', $activity->dte ?? '') }}"
+               class="form-ctrl w-full"/>
       </div>
 
       {{-- الوقت --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">على الساعة</label>
-        <input name="time" type="time"
-               value="{{ old('time', $activity->time ?? '') }}"
-               class="form-ctrl"/>
+        <input name="hr" type="time"
+               value="{{ old('hr', $activity->hr ?? '') }}"
+               class="form-ctrl w-full"/>
       </div>
 
       {{-- المسؤول --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">المسؤول عن النشاط *</label>
-        <input name="responsible" type="text"
-               value="{{ old('responsible', $activity->responsible ?? '') }}"
-               class="form-ctrl"/>
+        <input name="resp" type="text"
+               value="{{ old('resp', $activity->resp ?? '') }}"
+               class="form-ctrl w-full"/>
       </div>
 
     </div>
 
     {{-- العنوان --}}
-    <div>
+    <div class="text-right">
       <label class="block text-xs font-bold text-slate-500 mb-2">عنوان النشاط *</label>
-      <textarea name="title" class="form-ctrl">{{ old('title', $activity->title ?? '') }}</textarea>
+      <textarea name="title" class="form-ctrl w-full">{{ old('title', $activity->title ?? '') }}</textarea>
     </div>
 
     {{-- التفاصيل --}}
-    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2 pb-3 border-b border-slate-100">
+    <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-6 mb-2 pb-3 border-b border-slate-100 text-right">
       التفاصيل
     </p>
 
     <div class="grid grid-cols-2 gap-4">
 
       {{-- المكان --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">مكانه *</label>
-        <input name="place" type="text"
-               value="{{ old('place', $activity->place ?? '') }}"
-               class="form-ctrl"/>
+        <input name="lieu" type="text"
+               value="{{ old('lieu', $activity->lieu ?? '') }}"
+               class="form-ctrl w-full"/>
       </div>
 
       {{-- المستفيدون --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">المستفيدون</label>
-        <input name="beneficiaries" type="text"
-               value="{{ old('beneficiaries', $activity->beneficiaries ?? '') }}"
-               class="form-ctrl"/>
+        <input name="benfs" type="text"
+               value="{{ old('benfs', $activity->benfs ?? '') }}"
+               class="form-ctrl w-full"/>
       </div>
 
       {{-- العدد --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">عددهم</label>
-        <input name="count" type="number"
-               value="{{ old('count', $activity->count ?? '') }}"
-               class="form-ctrl"/>
+        <input name="nb" type="number"
+               value="{{ old('nb', $activity->nb ?? '') }}"
+               class="form-ctrl w-full"/>
       </div>
 
       {{-- المرجع --}}
-      <div>
+      <div class="text-right">
         <label class="block text-xs font-bold text-slate-500 mb-2">المرجع</label>
-        <input name="reference" type="text"
-               value="{{ old('reference', $activity->reference ?? '') }}"
-               class="form-ctrl"/>
+        <input name="ref" type="text"
+               value="{{ old('ref', $activity->ref ?? '') }}"
+               class="form-ctrl w-full"/>
       </div>
 
     </div>
 
     {{-- الصور --}}
-    <div>
+    <div class="text-right">
       <label class="block text-xs font-bold text-slate-500 mb-2">صور النشاط</label>
-      <input name="photos[]" type="file" multiple accept="image/*" class="form-ctrl"/>
+      <input name="photos[]" type="file" multiple accept="image/*" class="form-ctrl w-full"/>
     </div>
 
     {{-- buttons --}}

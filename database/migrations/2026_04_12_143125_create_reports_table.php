@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reports', function (Blueprint $table) {
-            $table->id();
-            $table->integer('idact');
-            $table->string('title')->nullable();
-            $table->integer('byu');
-            $table->longText('rap');
-            $table->integer('vu')->default(0);
-            $table->timestamps()->nullable();
-            $table->index('idact');
-        });
+       Schema::create('reports', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('idact')->constrained('activities')->onDelete('cascade');
+    $table->string('title')->nullable();
+    $table->foreignId('byu')->constrained('users')->onDelete('cascade');
+    $table->longText('rap');
+    $table->integer('vu')->default(0);
+    $table->timestamps();
+});
     }
 
     /**

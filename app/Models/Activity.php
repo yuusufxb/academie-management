@@ -3,56 +3,32 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Activity extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'title',
-        'type',
-        'date',
-        'place',
-        'responsible',
-        'description',
-        'icon',
-        'color_class',
-        'type_color',
-        'status',          // مصادق | انتظار | مسودة
-        'scheduled_date',
-        'notes',
-    ];
-
-    protected $casts = [
-        'date'           => 'date',
-        'scheduled_date' => 'date',
-    ];
-
+    protected $fillable = ['typ', 'dte', 'hr', 'title', 'resp', 'lieu', 'benfs', 'nb', 'ref', 'gre', 'niv'];
     public function photos()
-    {
-        return $this->hasMany(Photo::class);
-    }
+{
+    return $this->hasMany(Photo::class, 'idact');
+}
 
-    /** Scope: filter by type */
-    public function scopeOfType($query, $type)
-    {
-        return $query->where('type', $type);
-    }
+public function reports()
+{
+    return $this->hasMany(Report::class, 'idact');
+}
 
-    /** Scope: programmed (has a scheduled_date) */
-    public function scopeProgrammed($query)
+public function stars()
+{
+    return $this->hasMany(Star::class, 'idact');
+}
+public function mainPhoto()
+{
+    return $this->hasOne(Photo::class, 'idact')->where('is_main', 1);
+}
+public function catigory()
     {
-        return $query->whereNotNull('scheduled_date');
-    }
-
-    /** Scope: search */
-    public function scopeSearch($query, $term)
-    {
-        return $query->where(function ($q) use ($term) {
-            $q->where('title', 'like', "%$term%")
-              ->orWhere('responsible', 'like', "%$term%")
-              ->orWhere('place', 'like', "%$term%");
-        });
+        // 'typ' هو العمود الموجود في جدول activities والذي يحتوي على ID الفئة
+        return $this->belongsTo(Catigory::class, 'typ');
     }
 }
+

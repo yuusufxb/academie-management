@@ -45,7 +45,9 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 | ADMIN ROUTES (protected by auth middleware)
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+Route::prefix('admin')->name('admin.')->
+// middleware(['auth'])->
+group(function () {
 
     // Dashboard & Search
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

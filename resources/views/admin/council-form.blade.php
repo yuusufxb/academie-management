@@ -1,51 +1,64 @@
 @extends('layouts.admin')
-@section('title', isset($session) ? 'تعديل المجلس الإداري' : 'إضافة مجلس جديد')
+@section('title', isset($council) ? 'تعديل المجلس الإداري' : 'إضافة مجلس جديد')
 @section('page-title','تتبع الأنشطة')
 @section('content')
 
 <div class="flex items-center justify-between mb-5">
   <h2 class="font-headline text-xl font-black text-slate-900">
-    {{ isset($session) ? 'تعديل المجلس الإداري دورة '.($session['session'] ?? '').' '.($session['year'] ?? '') : 'إضافة مجلس جديد' }}
+    {{-- تصحيح المتغير ليعرض العنوان بشكل ديناميكي --}}
+    {{ isset($council) ? 'تعديل المجلس الإداري دورة '.$council->mois.' '.$council->yr : 'إضافة مجلس جديد' }}
   </h2>
   <a href="{{ route('admin.council') }}" class="flex items-center gap-1 text-slate-500 hover:text-slate-800 text-sm font-bold transition-colors">
     <span class="material-symbols-outlined text-base">arrow_forward</span>رجوع
   </a>
 </div>
-
+  
 <div class="max-w-2xl">
   <form method="POST"
-        action="{{ isset($session) ? route('admin.council.update', $session['id'] ?? 1) : route('admin.council.store') }}"
+        action="{{ isset($council) ? route('admin.council.update', $council->id) : route('admin.council.store') }}"
         enctype="multipart/form-data">
-    @csrf @if(isset($session)) @method('PUT') @endif
+    @csrf 
+    @if(isset($council)) @method('PUT') @endif
 
     <div class="bg-white rounded-md shadow-sm p-6 space-y-5">
 
+      {{-- دورة --}}
       <div>
         <label class="block text-slate-700 text-sm font-bold mb-2 text-right">دورة</label>
-        <input name="session" type="text" value="{{ $session['session'] ?? '' }}" placeholder="يناير" class="form-ctrl"/>
+        <input name="mois" type="text" value="{{ old('mois', $council->mois ?? '') }}" placeholder="يناير" class="form-ctrl"/>
       </div>
+
+      {{-- السنة --}}
       <div>
         <label class="block text-slate-700 text-sm font-bold mb-2 text-right">السنة</label>
-        <input name="year" type="number" value="{{ $session['year'] ?? '' }}" class="form-ctrl"/>
+        <input name="yr" type="number" value="{{ old('yr', $council->yr ?? '') }}" class="form-ctrl"/>
       </div>
+
+      {{-- تاريخه --}}
       <div>
         <label class="block text-slate-700 text-sm font-bold mb-2 text-right">تاريخه</label>
-        <input name="date" type="date" value="{{ $session['date'] ?? '' }}" class="form-ctrl"/>
+        <input name="dte" type="date" value="{{ old('dte', $council->dte ?? '') }}" class="form-ctrl"/>
       </div>
+
+      {{-- مكانه --}}
       <div>
         <label class="block text-slate-700 text-sm font-bold mb-2 text-right">مكانه</label>
-        <input name="place" type="text" value="{{ $session['place'] ?? '' }}" class="form-ctrl"/>
+        <input name="lieu" type="text" value="{{ old('lieu', $council->lieu ?? '') }}" class="form-ctrl"/>
       </div>
+
+      {{-- تقرير --}}
       <div>
         <label class="block text-slate-700 text-sm font-bold mb-2 text-right">تقرير</label>
-        <textarea name="report" class="form-ctrl" style="height:100px">{{ $session['report'] ?? '' }}</textarea>
+        <textarea name="rap" class="form-ctrl" style="height:100px">{{ old('rap', $council->rap ?? '') }}</textarea>
       </div>
+
+      {{-- صورة --}}
       <div>
         <label class="block text-slate-700 text-sm font-bold mb-2 text-right">صورة</label>
-        @if(isset($session) && !empty($session['image']))
-          <img src="{{ asset('storage/'.$session['image']) }}" class="h-28 rounded-md mb-2 object-cover"/>
+        @if(isset($council) && !empty($council->tof))
+          <img src="{{ asset('storage/'.$council->tof) }}" class="h-28 rounded-md mb-2 object-cover"/>
         @endif
-        <input name="image" type="file" accept="image/*" class="form-ctrl" style="padding:6px"/>
+        <input name="tof" type="file" accept="image/*" class="form-ctrl" style="padding:6px"/>
       </div>
 
       <div class="flex justify-end pt-2 border-t border-slate-100">

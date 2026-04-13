@@ -3,7 +3,6 @@
 @section('title', 'الرئيسية — الأكاديمية الجهوية للتربية والتكوين سوس ماسة')
 
 @section('content')
-<!-- HERO -->
 <section class="relative pt-28 pb-20 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
   <div class="lg:col-span-7 z-10">
     <span class="text-secondary font-label font-bold tracking-widest uppercase text-xs block mb-4">الأكاديمية الجهوية للتربية والتكوين — جهة سوس ماسة</span>
@@ -22,77 +21,81 @@
         <div class="w-full bg-white/10 rounded-lg p-4 backdrop-blur-sm">
           <p class="text-white/60 text-xs font-label mb-2">لوحة التتبع المحسّنة</p>
           <div class="grid grid-cols-2 gap-2">
-            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">568</p><p class="text-white/50 text-xs">مجموع الأنشطة</p></div>
-            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">442</p><p class="text-white/50 text-xs">المؤسسات</p></div>
-            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">68</p><p class="text-white/50 text-xs">المديريات</p></div>
+            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">{{ $totalActivities }}</p><p class="text-white/50 text-xs">مجموع الأنشطة</p></div>
+            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">{{ $schoolsCount }}</p><p class="text-white/50 text-xs">المؤسسات</p></div>
+            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">06</p><p class="text-white/50 text-xs">المديريات</p></div>
             <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">91%</p><p class="text-white/50 text-xs">نسبة المصادقة</p></div>
           </div>
         </div>
         <div class="w-full space-y-2">
-          <div class="w-full bg-white/10 rounded-md px-3 py-2 flex justify-between items-center"><span class="text-white/70 text-xs">يوم النباتات العصرية</span><span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">مصادق</span></div>
-          <div class="w-full bg-white/10 rounded-md px-3 py-2 flex justify-between items-center"><span class="text-white/70 text-xs">الأسبوع الوطني للصحة</span><span class="bg-amber-500/30 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full">انتظار</span></div>
-          <div class="w-full bg-white/10 rounded-md px-3 py-2 flex justify-between items-center"><span class="text-white/70 text-xs">مسابقة العلوم الجهوية</span><span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">مصادق</span></div>
+          @foreach($recent_activities as $act)
+          <div class="w-full bg-white/10 rounded-md px-3 py-2 flex justify-between items-center">
+            <span class="text-white/70 text-xs">{{ Str::limit($act->title, 30) }}</span>
+            <span class="bg-emerald-500/30 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">نشط</span>
+          </div>
+          @endforeach
         </div>
       </div>
     </div>
     <div class="absolute -bottom-6 -right-6 bg-secondary-container p-6 rounded-xl shadow-lg max-w-xs hidden md:block">
-      <p class="text-on-secondary-container font-headline font-bold text-2xl mb-1">+1,200</p>
+      <p class="text-on-secondary-container font-headline font-bold text-2xl mb-1">+{{ number_format($totalActivities) }}</p>
       <p class="text-on-secondary-container/80 text-sm font-medium">نشاط تربوي منجز هذا الموسم الدراسي.</p>
     </div>
   </div>
 </section>
 
-<!-- KPI BENTO -->
 <section class="bg-surface-container-low py-24 px-6">
   <div class="max-w-7xl mx-auto">
     <div class="flex justify-between items-end mb-12">
       <div><span class="text-secondary font-label font-bold tracking-widest uppercase text-xs">نظرة إحصائية</span><h2 class="font-headline text-primary text-3xl font-bold mt-2">الأثر بالأرقام</h2></div>
-      <button class="text-primary font-bold flex items-center gap-2 hover:underline"><span>تقرير تفصيلي</span><span class="material-symbols-outlined">arrow_back</span></button>
+      
     </div>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-secondary text-4xl group-hover:text-secondary-fixed">school</span>
-        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">58</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">الأكاديمية الجهوية</p></div>
+        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">01</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">الأكاديمية الجهوية</p></div>
       </div>
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-secondary text-4xl group-hover:text-secondary-fixed">account_balance</span>
-        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">68</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المديريات الإقليمية</p></div>
+        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">06</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المديريات الإقليمية</p></div>
       </div>
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-secondary text-4xl group-hover:text-secondary-fixed">domain</span>
-        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">442</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المؤسسات التعليمية</p></div>
+        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">{{ $schoolsCount }}</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المؤسسات التعليمية</p></div>
       </div>
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-secondary text-4xl group-hover:text-secondary-fixed">task_alt</span>
-        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">568</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">مجموع الأنشطة</p></div>
+        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">{{ $totalActivities }}</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">مجموع الأنشطة</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- COUNCIL PREVIEW -->
 <section class="py-24 px-6 max-w-7xl mx-auto">
   <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
     <div><span class="text-secondary font-label font-bold tracking-widest uppercase text-xs">الهيئة التداولية</span><h2 class="font-headline text-primary text-3xl font-bold mt-2">المجلس الإداري للأكاديمية</h2></div>
     <a href="{{ route('council') }}" class="text-primary font-bold flex items-center gap-2 hover:underline"><span>عرض الكل</span><span class="material-symbols-outlined">arrow_back</span></a>
   </div>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-    <div class="bg-surface-container-lowest rounded-md overflow-hidden group cursor-pointer">
-      <div class="h-48 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-400 text-6xl">gavel</span></div>
-      <div class="p-6"><p class="text-secondary text-xs font-bold mb-2">دورة دجنبر 2021</p><h3 class="font-headline font-bold text-lg mb-3 group-hover:text-secondary transition-colors">الدورة العادية للمجلس الإداري للأكاديمية الجهوية</h3><p class="text-on-surface-variant text-sm line-clamp-2">صادق المجلس الإداري للأكاديمية الجهوية للتربية والتكوين لجهة سوس ماسة بمقر ولاية جهة سوس ماسة يوم الجمعة 03 دجنبر 2021...</p></div>
+    @foreach($councils as $council)
+    <div onclick="window.location='{{ route('council.show', $council->id) }}'" class="bg-surface-container-lowest rounded-md overflow-hidden group cursor-pointer border border-transparent hover:border-slate-200 transition-all">
+      <div class="h-48 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+        @if($council->tof)
+          <img src="{{ asset('storage/' . $council->tof) }}" class="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity">
+        @else
+          <span class="material-symbols-outlined text-emerald-400 text-6xl">gavel</span>
+        @endif
+      </div>
+      <div class="p-6">
+        <p class="text-secondary text-xs font-bold mb-2">دورة {{ $council->mois }} {{ $council->yr }}</p>
+        <h3 class="font-headline font-bold text-lg mb-3 group-hover:text-secondary transition-colors">الدورة العادية للمجلس الإداري</h3>
+        <p class="text-on-surface-variant text-sm line-clamp-2">{{ $council->lieu }} — {{ $council->dte }}</p>
+      </div>
     </div>
-    <div class="bg-surface-container-lowest rounded-md overflow-hidden group cursor-pointer">
-      <div class="h-48 bg-gradient-to-br from-slate-700 to-emerald-900 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-400 text-6xl">how_to_vote</span></div>
-      <div class="p-6"><p class="text-secondary text-xs font-bold mb-2">دورة دجنبر 2022</p><h3 class="font-headline font-bold text-lg mb-3 group-hover:text-secondary transition-colors">الدورة العادية الثانية للمجلس الإداري</h3><p class="text-on-surface-variant text-sm line-clamp-2">ترأس السيد يوسف بلقاسمي، الكاتب العام لوزارة التربية الوطنية والتعليم الأولي والرياضة بتفويض من السيد وزير...</p></div>
-    </div>
-    <div class="bg-surface-container-lowest rounded-md overflow-hidden group cursor-pointer">
-      <div class="h-48 bg-gradient-to-br from-emerald-900 to-slate-900 flex items-center justify-center"><span class="material-symbols-outlined text-emerald-400 text-6xl">workspace_premium</span></div>
-      <div class="p-6"><p class="text-secondary text-xs font-bold mb-2">دورة دجنبر 2023</p><h3 class="font-headline font-bold text-lg mb-3 group-hover:text-secondary transition-colors">انعقاد الدورة العادية للمجلس الإداري 2023</h3><p class="text-on-surface-variant text-sm line-clamp-2">انعقدت الدورة العادية للمجلس الإداري للأكاديمية الجهوية للتربية والتكوين لجهة سوس ماسة برسم سنة 2023...</p></div>
-    </div>
+    @endforeach
   </div>
 </section>
 
-<!-- FULL FOOTER (home only) -->
 <footer class="w-full py-12 px-6 border-t border-slate-100 bg-slate-50 mt-12">
   <div class="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
     <div class="col-span-1 md:col-span-2">

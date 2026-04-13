@@ -1,40 +1,58 @@
 @extends('layouts.app')
-@section('title', 'المبادرات الجهوية')
+@section('title', 'المبادرات المتميزة')
 @section('content')
 <div class="pt-16">
   <section class="bg-surface-container-low py-24 px-6">
     <div class="max-w-7xl mx-auto">
-      <div class="mb-12">
+      <div class="mb-12 text-right" dir="rtl">
         <span class="text-secondary font-label font-bold tracking-widest uppercase text-xs">المبادرات الجهوية المتميزة</span>
-        <h2 class="font-headline text-primary text-3xl font-bold mt-2">المبادرات والأنشطة المتميزة جهوياً</h2>
+        <h2 class="font-headline text-primary text-3xl font-bold mt-2">المبادرات المتميزة</h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @php
-          $initiatives = [
-            ['id'=>1,'icon'=>'emoji_events','grad'=>'from-slate-800 to-emerald-900','tag'=>'محلي','tag_color'=>'bg-emerald-100 text-emerald-700','title'=>'م.م. ابن عباد بطل المسابقة الإقليمية','desc'=>'مدرسة ابن عباد تحقق بطولة الإقليم في إطار المسابقات الرياضية المدرسية الجهوية.'],
-            ['id'=>2,'icon'=>'public','grad'=>'from-slate-700 to-slate-900','tag'=>'جهوي','tag_color'=>'bg-blue-100 text-blue-700','title'=>'م.م. ابن عباد تحتفل باليوم العالمي','desc'=>'احتفال تربوي شامل باليوم العالمي في إطار برامج التوعية البيئية والحقوقية.'],
-            ['id'=>3,'icon'=>'child_care','grad'=>'from-emerald-800 to-slate-800','tag'=>'محلي','tag_color'=>'bg-emerald-100 text-emerald-700','title'=>'أطفال المستوى السادس في زيارة','desc'=>'زيارة تربوية ثقافية لأطفال المستوى السادس لاكتشاف مرافق جهوية ووطنية.'],
-            ['id'=>4,'icon'=>'lightbulb','grad'=>'from-slate-800 to-emerald-800','tag'=>'محلي','tag_color'=>'bg-emerald-100 text-emerald-700','title'=>'معرض الأم المبدعة','desc'=>'معرض سنوي يحتفي بإبداعات الأمهات في إطار شراكة المدرسة والأسرة والمجتمع.'],
-            ['id'=>5,'icon'=>'manage_accounts','grad'=>'from-slate-900 to-emerald-900','tag'=>'محلي','tag_color'=>'bg-emerald-100 text-emerald-700','title'=>'زيارة السيد المدير الإقليمي','desc'=>'زيارات ميدانية وإشرافية للمدير الإقليمي لمتابعة سير الأنشطة التربوية.'],
-            ['id'=>6,'icon'=>'computer','grad'=>'from-slate-800 to-slate-700','tag'=>'جهوي','tag_color'=>'bg-blue-100 text-blue-700','title'=>'CODING POUR TOUS — برمجة للجميع','desc'=>'المديرية الإقليمية بتارودانت تنظم ورشات تكوينية حول البرمجة للجميع 2022-2026.'],
-          ];
-        @endphp
-        @foreach($initiatives as $item)
-         <a href="{{ route('initiatives.show', $item['id']) }}" class="block">
-          <div class="bg-surface-container-lowest rounded-md overflow-hidden group cursor-pointer">
-            <div class="h-48 bg-gradient-to-br {{ $item['grad'] }} flex items-center justify-center">
-              <span class="material-symbols-outlined text-emerald-400 text-6xl">{{ $item['icon'] }}</span>
-            </div>
-            <div class="p-6">
-              <div class="flex items-center gap-2 text-on-surface-variant text-xs mb-3">
-                <span class="{{ $item['tag_color'] }} text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $item['tag'] }}</span>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8" dir="rtl">
+        @forelse($initiatives as $item)
+          <a href="{{ route('initiatives.show', $item->id) }}" class="block">
+            <div class="bg-surface-container-lowest rounded-md overflow-hidden group cursor-pointer shadow-sm hover:shadow-md transition-shadow">
+              
+              {{-- عرض الصورة من قاعدة البيانات --}}
+              <div class="h-48 relative overflow-hidden flex items-center justify-center bg-slate-200">
+                @if($item->tof)
+                  {{-- عرض الصورة المخزنة في حقل tof --}}
+                  <img src="{{ asset('storage/' . $item->tof) }}" 
+                       alt="{{ $item->title }}"
+                       class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                @else
+                  {{-- في حال عدم وجود صورة، نعرض صورة افتراضية أو خلفية ملونة بدلاً من الأيقونة --}}
+                  <div class="w-full h-full bg-gradient-to-br from-slate-700 to-emerald-900 flex items-center justify-center">
+                    <span class="text-white/20 font-bold">لا توجد صورة</span>
+                  </div>
+                @endif
               </div>
-              <h3 class="font-headline font-bold text-xl mb-3 group-hover:text-secondary transition-colors">{{ $item['title'] }}</h3>
-              <p class="text-on-surface-variant text-sm line-clamp-3">{{ $item['desc'] }}</p>
+
+              <div class="p-6 text-right">
+                <div class="flex items-center justify-start gap-2 text-on-surface-variant text-xs mb-3">
+                  <span class="{{ $item->typ == 'جهوي' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700' }} text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ $item->typ ?? 'محلي' }}
+                  </span>
+                </div>
+                
+                <h3 class="font-headline font-bold text-xl mb-3 group-hover:text-secondary transition-colors leading-tight">
+                  {{ $item->title }}
+                </h3>
+                
+                <p class="text-on-surface-variant text-sm line-clamp-3">
+                  {{ strip_tags($item->infos) }}
+                </p>
+              </div>
             </div>
-          </div>
-         </a>
-        @endforeach
+          </a>
+        @empty
+          <p class="col-span-3 text-center py-20 text-on-surface-variant">لا توجد مبادرات متميزة حالياً.</p>
+        @endforelse
+      </div>
+
+      <div class="mt-12 text-center">
+        {{ $initiatives->links() }}
       </div>
     </div>
   </section>

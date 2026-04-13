@@ -1,54 +1,96 @@
-<?php namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
+<?php
 
-class VideoController extends Controller {
-    public function index() {
-        $videos = collect([]);
-        return view('admin.videos', compact('videos'));
-    }
-    public function create()
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Media; 
+
+class VideoController extends Controller
+{
+    /**
+     * عرض قائمة الفيديوهات
+     */
+    public function index()
     {
-        return view('admin.video-form'); 
+        $videos = Media::latest('id')->paginate(10);
+        return view('admin.videos', compact('videos'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * عرض صفحة إضافة فيديو جديد
+     */
+    public function create()
+    {
+        return view('admin.video-form');
+    }
+
+    /**
+     * حفظ الفيديو الجديد في قاعدة البيانات
      */
     public function store(Request $request)
     {
-        //
+        // 1. التحقق من البيانات (تم تعديل tof ليكون نصاً و typ ليقبل الأرقام القادمة من الفورم)
+        $data = $request->validate([
+            'typ'   => 'required',
+            'title' => 'required|string|max:255',
+            'link'  => 'required|string',
+            'tof'   => 'nullable|string', // تم تغييره من image إلى string ليصبح "المعرف"
+        ]);
+
+        // 2. إنشاء السجل في قاعدة البيانات
+        Media::create($data);
+
+        // 3. التوجه لصفحة الجدول مع رسالة نجاح
+        // ملاحظة: تأكد أن اسم المسار هو 'admin.videos' في ملف web.php
+        return redirect()->route('admin.videos')->with('success', 'تمت إضافة الفيديو بنجاح');
     }
 
     /**
-     * Display the specified resource.
+     * عرض تفاصيل فيديو محدد
      */
-    public function show(string $id)
+    public function show($id)
     {
-        return view('admin.video-show');
+        $video = Media::findOrFail($id);
+        return view('admin.video-show', compact('video'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * عرض صفحة تعديل الفيديو
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
-        
+        $video = Media::findOrFail($id);
+        return view('admin.video-form', compact('video'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * تحديث بيانات الفيديو في قاعدة البيانات
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $video = Media::findOrFail($id);
+
+        // 1. التحقق من البيانات
+        $data = $request->validate([
+            'typ'   => 'required',
+            'title' => 'required|string|max:255',
+            'link'  => 'required|string',
+            'tof'   => 'nullable|string', // تم التعديل ليتوافق مع "المعرف"
+        ]);
+
+        // 2. تحديث السجل
+        $video->update($data);
+
+        return redirect()->route('admin.videos')->with('success', 'تم تحديث البيانات بنجاح');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * حذف الفيديو
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        Media::findOrFail($id)->delete();
+        return back()->with('success', 'تم الحذف بنجاح');
     }
 }

@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('divs', function (Blueprint $table) {
-            $table->id();
-            $table->integer('niv')->default(1);
-            $table->integer('type')->default(1);
-            $table->string('title', 200)->default('1');
-            $table->integer('src')->nullable();
-        });
+        Schema::create('media', function (Blueprint $table) {
+    $table->id();
+    $table->integer('typ');
+    $table->string('title');
+    $table->string('link');
+    $table->string('tof')->nullable();
+    $table->timestamps();
+});
     }
 
     /**
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('divs');
+        Schema::dropIfExists('media');
     }
 };

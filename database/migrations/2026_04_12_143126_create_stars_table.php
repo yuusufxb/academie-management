@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stars', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('idact')->default(0);
-            $table->integer('typ');
-            $table->string('title');
-            $table->text('infos');
-            $table->text('tof')->nullable();
-            $table->timestamps()->nullable();
-        });
+    $table->id();
+    $table->foreignId('idact')->nullable()->constrained('activities')->onDelete('cascade');
+    $table->integer('typ');
+    $table->string('title');
+    $table->text('infos');
+    $table->text('tof')->nullable();
+    $table->timestamps();
+});
     }
 
     /**

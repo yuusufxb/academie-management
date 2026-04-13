@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('c_admins', function (Blueprint $table) {
-            $table->id();
-            $table->integer('yr');
-            $table->string('mois', 12);
-            $table->string('lieu')->nullable();
-            $table->date('dte');
-            $table->text('rap');
-            $table->string('tof')->nullable();
-            $table->timestamps()->nullable();
-                    });
+    $table->id();
+    $table->integer('yr');
+    $table->string('mois', 12);
+    $table->string('lieu')->nullable();
+    $table->date('dte');
+    $table->text('rap');
+    $table->string('tof')->nullable();
+    $table->timestamps();
+});
     }
 
     /**
