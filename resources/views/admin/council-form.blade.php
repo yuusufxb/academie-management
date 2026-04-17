@@ -56,7 +56,7 @@
       <div>
         <label class="block text-slate-700 text-sm font-bold mb-2 text-right">صورة</label>
         @if(isset($council) && !empty($council->tof))
-          <img src="{{ asset('storage/'.$council->tof) }}" class="h-28 rounded-md mb-2 object-cover"/>
+          <img src="{{ photo_asset($council->tof) }}" class="h-28 rounded-md mb-2 object-cover"/>
         @endif
         <input name="tof" type="file" accept="image/*" class="form-ctrl" style="padding:6px"/>
       </div>

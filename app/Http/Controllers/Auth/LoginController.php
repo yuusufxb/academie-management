@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -14,7 +15,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('admin.dashboard');
+            return redirect($this->redirectPathForLevel((int) Auth::user()->niv));
         }
         return view('auth.login');
     }
@@ -24,11 +25,17 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        $roleLevelMap = [
+            'مؤسسة' => [User::LEVEL_INSTITUTION],
+            'إقليم' => [User::LEVEL_SUPERVISOR, User::LEVEL_PROVINCIAL_ADMIN],
+            'أكاديمية' => [User::LEVEL_DIRECTOR, User::LEVEL_ACADEMY_ADMIN],
+        ];
+
         // 1. التحقق من صحة المدخلات
         $request->validate([
             'username' => 'required|email', // المستخدم يدخل البريد الإلكتروني
             'password' => 'required|string',
-            'role'     => 'required|string', // (مؤسسة، إقليم، أكاديمية)
+            'role'     => 'nullable|in:مؤسسة,إقليم,أكاديمية',
         ], [
             'username.required' => 'يرجى إدخال البريد الإلكتروني',
             'username.email'    => 'صيغة البريد الإلكتروني غير صحيحة',
@@ -48,13 +55,7 @@ class LoginController extends Controller
 
             // 4. التحقق من "الدور" المختار مقابل "المستوى" في قاعدة البيانات (niv)
             // niv: 1 => مؤسسة | 2 => إقليم | 3 => أكاديمية
-            $isAllowed = false;
-            
-            if ($request->role === 'مؤسسة' && $user->niv == 1) $isAllowed = true;
-            elseif ($request->role === 'إقليم' && $user->niv == 2) $isAllowed = true;
-            elseif ($request->role === 'أكاديمية' && $user->niv == 3) $isAllowed = true;
-
-            if (!$isAllowed) {
+            if ($request->filled('role') && !in_array((int) $user->niv, $roleLevelMap[$request->role], true)) {
                 Auth::logout();
                 return back()->withErrors([
                     'username' => 'عذراً، هذا الحساب غير مصرح له بالولوج كـ ' . $request->role,
@@ -63,7 +64,7 @@ class LoginController extends Controller
 
             // 5. نجاح الدخول - تجديد الجلسة والتوجيه
             $request->session()->regenerate();
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended($this->redirectPathForLevel((int) $user->niv));
         }
 
         // 6. فشل تسجيل الدخول
@@ -81,5 +82,14 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');
+    }
+
+    private function redirectPathForLevel(int $level): string
+    {
+        return match ($level) {
+            User::LEVEL_PROVINCIAL_ADMIN => route('admin.iqlim.dashboard'),
+            User::LEVEL_ACADEMY_ADMIN => route('admin.academy.dashboard'),
+            default => route('admin.dashboard'),
+        };
     }
 }

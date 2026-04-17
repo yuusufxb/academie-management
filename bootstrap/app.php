@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'level' => \App\Http\Middleware\EnsureUserLevel::class,
+            'media.permission' => \App\Http\Middleware\EnsureMediaPermission::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

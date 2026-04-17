@@ -65,7 +65,7 @@
               @php $displayPhoto = $activity->mainPhoto ?? $activity->photos->first(); @endphp
               
               @if($displayPhoto)
-                <img src="{{ asset('storage/' . $displayPhoto->path) }}" alt="{{ $activity->title }}" class="w-full h-full object-cover">
+                <img src="{{ photo_asset($displayPhoto->path) }}" alt="{{ $activity->title }}" class="w-full h-full object-cover">
               @else
                 <span class="text-6xl opacity-30">{{ $activity->icon ?? '🎓' }}</span>
               @endif

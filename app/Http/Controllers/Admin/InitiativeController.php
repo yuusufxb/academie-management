@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Report; // استخدام الموديل الجديد
 use Illuminate\Support\Facades\Auth;
+use App\Models\InitiativePhoto;
+use Illuminate\Support\Facades\Storage;
 
 class InitiativeController extends Controller
 {
@@ -27,7 +29,8 @@ class InitiativeController extends Controller
         $request->validate([
             'title'  => 'required|string|max:255',
             'report' => 'required|string', // هذا القادم من الـ Form
-            'image'  => 'nullable|image|max:5120',
+            'photos' => 'nullable|array|max:6',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $data = [
@@ -38,12 +41,18 @@ class InitiativeController extends Controller
             'idact' => $request->idact ?? 1, // ربطها بنشاط معين حسب الحاجة
         ];
 
-        if ($request->hasFile('image')) {
-            // ملاحظة: إذا كان الموديل لا يحتوي على حقل image أو tof، يجب إضافته للـ fillable
-            $data['image'] = $request->file('image')->store('initiatives', 'public');
-        }
+        $initiative = Report::create($data);
 
-        Report::create($data);
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $path = $photo->store('initiative-photos', 'public');
+                InitiativePhoto::create([
+                    'idrep' => $initiative->id,
+                    'name'  => $photo->getClientOriginalName(),
+                    'path'  => $path,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.initiatives')
             ->with('success', 'تمت إضافة المبادرة');
@@ -51,24 +60,26 @@ class InitiativeController extends Controller
 
     public function show($id)
     {
-        $initiative = Report::findOrFail($id);
+        $initiative = Report::with('photos')->findOrFail($id);
         return view('admin.initiative-show', compact('initiative'));
     }
 
     public function edit($id)
     {
-        $initiative = Report::findOrFail($id);
+        $initiative = Report::with('photos')->findOrFail($id);
         return view('admin.initiative-edit', compact('initiative'));
     }
 
     public function update(Request $request, $id)
     {
-        $initiative = Report::findOrFail($id);
+        $initiative = Report::with('photos')->findOrFail($id);
 
         $request->validate([
             'title'  => 'required|string|max:255',
             'report' => 'required|string',
-            'image'  => 'nullable|image|max:5120',
+            'photos' => 'nullable|array|max:6',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
+            'remove_photos' => 'nullable|array',
         ]);
 
         $data = [
@@ -76,11 +87,34 @@ class InitiativeController extends Controller
             'rap'   => $request->report, // تحويل report إلى rap
         ];
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('initiatives', 'public');
+        $initiative->update($data);
+
+        // Delete photos marked for removal
+        if ($request->filled('remove_photos')) {
+            foreach ($request->remove_photos as $photoId) {
+                $photo = InitiativePhoto::find($photoId);
+                if ($photo && (int) $photo->idrep === (int) $initiative->id) {
+                    Storage::disk('public')->delete($photo->path);
+                    $photo->delete();
+                }
+            }
         }
 
-        $initiative->update($data);
+        // Re-count remaining photos after deletions
+        $existingCount = $initiative->photos()->count();
+
+        // Add new photos (respect max 6 total)
+        if ($request->hasFile('photos')) {
+            $allowed = max(0, 6 - $existingCount);
+            foreach (array_slice($request->file('photos'), 0, $allowed) as $photo) {
+                $path = $photo->store('initiative-photos', 'public');
+                InitiativePhoto::create([
+                    'idrep' => $initiative->id,
+                    'name'  => $photo->getClientOriginalName(),
+                    'path'  => $path,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.initiatives')
             ->with('success', 'تم تحديث المبادرة');
@@ -88,7 +122,12 @@ class InitiativeController extends Controller
 
     public function destroy($id)
     {
-        $initiative = Report::findOrFail($id);
+        $initiative = Report::with('photos')->findOrFail($id);
+
+        foreach ($initiative->photos as $photo) {
+            Storage::disk('public')->delete($photo->path);
+            $photo->delete();
+        }
         $initiative->delete();
 
         return redirect()->route('admin.initiatives')

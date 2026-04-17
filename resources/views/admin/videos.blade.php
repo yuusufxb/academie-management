@@ -4,8 +4,10 @@
 @section('content')
     <div class="flex items-center justify-between mb-4">
         <h2 class="font-headline text-xl font-black text-slate-900">تتبع الفيديو</h2>
-        <a href="{{ route('admin.videos.create') }}"
-            class="bg-secondary text-white px-4 py-2 rounded-md text-sm font-bold active:scale-95">إضافة فيديو جديد</a>
+        @if(auth()->user() && auth()->user()->canManageMedia())
+            <a href="{{ route('admin.videos.create') }}"
+                class="bg-secondary text-white px-4 py-2 rounded-md text-sm font-bold active:scale-95">إضافة فيديو جديد</a>
+        @endif
     </div>
 
     <div class="bg-surface-container-lowest rounded-md overflow-hidden">
@@ -64,19 +66,21 @@
                                 </a>
 
                                 {{-- 2. زر التعديل (الأصفر) --}}
-                                <a href="{{ route('admin.videos.edit', $video->id) }}" class="icon-action"
-                                    style="background:#fef3c7;color:#b45309">
-                                    <span class="material-symbols-outlined text-sm">edit</span>
-                                </a>
+                                @if(auth()->user() && auth()->user()->canManageMedia())
+                                    <a href="{{ route('admin.videos.edit', $video->id) }}" class="icon-action"
+                                        style="background:#fef3c7;color:#b45309">
+                                        <span class="material-symbols-outlined text-sm">edit</span>
+                                    </a>
 
-                                {{-- 3. زر الحذف (الأحمر) --}}
-                                <form method="POST" action="{{ route('admin.videos.destroy', $video->id) }}"
-                                    onsubmit="return confirm('هل أنت متأكد؟')">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="icon-action" style="background:#fee2e2;color:#b91c1c">
-                                        <span class="material-symbols-outlined text-sm">delete</span>
-                                    </button>
-                                </form>
+                                    {{-- 3. زر الحذف (الأحمر) --}}
+                                    <form method="POST" action="{{ route('admin.videos.destroy', $video->id) }}"
+                                        onsubmit="return confirm('هل أنت متأكد؟')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="icon-action" style="background:#fee2e2;color:#b91c1c">
+                                            <span class="material-symbols-outlined text-sm">delete</span>
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         </td>
                     </tr>

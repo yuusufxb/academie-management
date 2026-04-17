@@ -18,7 +18,7 @@
               <div class="h-48 relative overflow-hidden flex items-center justify-center bg-slate-200">
                 @if($item->tof)
                   {{-- عرض الصورة المخزنة في حقل tof --}}
-                  <img src="{{ asset('storage/' . $item->tof) }}" 
+                  <img src="{{ photo_asset($item->tof) }}" 
                        alt="{{ $item->title }}"
                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 @else

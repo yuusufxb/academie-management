@@ -17,7 +17,7 @@
           <div class="h-56 relative overflow-hidden flex items-center justify-center bg-slate-900">
             @if($session->tof)
               {{-- الصورة الحقيقية من قاعدة البيانات --}}
-              <img src="{{ asset('storage/' . $session->tof) }}" 
+              <img src="{{ photo_asset($session->tof) }}" 
                    alt="دورة {{ $session->yr }}"
                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
               {{-- طبقة تظليل خفيفة لتحسين المظهر --}}

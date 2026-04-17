@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CAdmin;
+use Illuminate\Support\Facades\Storage;
 
 class CouncilController extends Controller
 {
@@ -66,13 +67,31 @@ public function update(Request $request, $id)
         'dte'  => 'required|date',
         'rap'  => 'nullable|string',
         'tof'  => 'nullable|image|max:5120',
+        'remove_tof' => 'nullable|boolean',
     ]);
 
-    if ($request->hasFile('tof')) {
-        // حذف الصورة القديمة إذا كنت تريد توفير مساحة (اختياري)
-        // if($council->tof) Storage::disk('public')->delete($council->tof);
-        
-        $data['tof'] = $request->file('tof')->store('councils', 'public');
+    $removeTof = $request->boolean('remove_tof');
+    $newTof = $request->file('tof');
+
+    // Clear existing photo
+    if ($removeTof && !$newTof) {
+        if ($council->tof) {
+            Storage::disk('public')->delete($council->tof);
+        }
+        $data['tof'] = null;
+    }
+
+    // Replace existing photo
+    if ($newTof) {
+        if ($council->tof) {
+            Storage::disk('public')->delete($council->tof);
+        }
+        $data['tof'] = $newTof->store('councils', 'public');
+    }
+
+    // If neither remove nor replace happened, don't overwrite with null
+    if (!$removeTof && !$newTof) {
+        unset($data['tof']);
     }
 
     $council->update($data);
@@ -83,6 +102,9 @@ public function update(Request $request, $id)
     public function destroy($id)
     {
         $council = CAdmin::findOrFail($id);
+        if ($council->tof) {
+            Storage::disk('public')->delete($council->tof);
+        }
         $council->delete();
         return redirect()->route('admin.council')->with('success', 'تم حذف الدورة');
     }

@@ -68,7 +68,7 @@
                     <div class="px-2">
                         @if($council->tof)
                             <div class="rounded-2xl overflow-hidden border-2 border-slate-100 group shadow-lg hover:border-[#10b981]/40 transition-all">
-                                <img src="{{ asset('storage/'.$council->tof) }}" class="w-full object-cover transition-all group-hover:scale-[1.01]" alt="صورة دورة المجلس"/>
+                                <img src="{{ photo_asset($council->tof) }}" class="w-full object-cover transition-all group-hover:scale-[1.01]" alt="صورة دورة المجلس"/>
                             </div>
                         @else
                             <div class="w-full h-64 bg-slate-50 border border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center">

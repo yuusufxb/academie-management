@@ -43,10 +43,11 @@
     <p class="text-slate-500 text-sm mb-8" style="font-family:Tajawal">أدخل بيانات حسابك للوصول إلى لوحة التتبع</p>
 
     <!-- ROLE SELECTOR -->
+    @php $selectedRole = old('role', 'مؤسسة'); @endphp
     <div class="flex gap-1 p-1 bg-slate-100 rounded-lg mb-6" id="roleBar">
-      <button type="button" onclick="selRole(this,'مؤسسة')" class="flex-1 py-2 rounded-md bg-white shadow-sm text-sm font-bold text-slate-800 transition-all" style="font-family:Tajawal">مؤسسة</button>
-      <button type="button" onclick="selRole(this,'إقليم')" class="flex-1 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-white/60 transition-all" style="font-family:Tajawal">إقليم</button>
-      <button type="button" onclick="selRole(this,'أكاديمية')" class="flex-1 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-white/60 transition-all" style="font-family:Tajawal">أكاديمية</button>
+      <button type="button" onclick="selRole(this,'مؤسسة')" class="flex-1 py-2 rounded-md {{ $selectedRole === 'مؤسسة' ? 'bg-white shadow-sm text-sm font-bold text-slate-800' : 'text-sm font-medium text-slate-500 hover:bg-white/60' }} transition-all" style="font-family:Tajawal">مؤسسة</button>
+      <button type="button" onclick="selRole(this,'إقليم')" class="flex-1 py-2 rounded-md {{ $selectedRole === 'إقليم' ? 'bg-white shadow-sm text-sm font-bold text-slate-800' : 'text-sm font-medium text-slate-500 hover:bg-white/60' }} transition-all" style="font-family:Tajawal">إقليم</button>
+      <button type="button" onclick="selRole(this,'أكاديمية')" class="flex-1 py-2 rounded-md {{ $selectedRole === 'أكاديمية' ? 'bg-white shadow-sm text-sm font-bold text-slate-800' : 'text-sm font-medium text-slate-500 hover:bg-white/60' }} transition-all" style="font-family:Tajawal">أكاديمية</button>
     </div>
 
     @if($errors->any())
@@ -57,17 +58,17 @@
 
     <form method="POST" action="{{ route('login.submit') }}" class="space-y-4 mb-6">
       @csrf
-      <input type="hidden" name="role" id="roleInput" value="مؤسسة"/>
+      <input type="hidden" name="role" id="roleInput" value="{{ $selectedRole }}"/>
       <div>
         <label class="block text-xs font-bold text-slate-500 uppercase mb-2" style="font-family:Tajawal">اسم المستخدم</label>
-        <input type="text" name="username" placeholder="اسم المستخدم" class="w-full bg-slate-50 border border-slate-200 rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-right" style="font-family:Tajawal"/>
+        <input type="text" name="username" value="{{ old('username') }}" placeholder="اسم المستخدم" class="w-full bg-slate-50 border border-slate-200 rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-right" style="font-family:Tajawal"/>
       </div>
       <div>
         <label class="block text-xs font-bold text-slate-500 uppercase mb-2" style="font-family:Tajawal">القن السري</label>
         <input type="password" name="password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-md px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-right"/>
       </div>
       <div class="flex items-center gap-2">
-        <input type="checkbox" name="remember" id="rem" class="accent-emerald-600"/>
+        <input type="checkbox" name="remember" id="rem" class="accent-emerald-600" {{ old('remember') ? 'checked' : '' }}/>
         <label for="rem" class="text-sm text-slate-500 cursor-pointer" style="font-family:Tajawal">تذكرني</label>
       </div>
       <button type="submit" class="w-full bg-black text-white py-3.5 rounded-md font-black text-base hover:shadow-lg active:scale-95 transition-all" style="font-family:Tajawal">تسجيل الدخول</button>

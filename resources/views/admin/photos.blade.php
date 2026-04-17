@@ -24,12 +24,12 @@
                 <div class="bg-white border border-slate-100 rounded-md overflow-hidden hover:shadow-md transition-all">
 
                     {{-- الرابط الذي يفتح الـ Lightbox (Album) --}}
-                    <a href="{{ asset('storage/' . $photo->path) }}" data-fancybox="gallery"
+                    <a href="{{ photo_asset($photo->path) }}" data-fancybox="gallery"
                         data-caption="صورة رقم : {{ $photo->id }} - {{ $photo->created_at->format('Y-m-d') }}">
 
                         <div class="photo-thumb h-48 bg-slate-50 flex items-center justify-center overflow-hidden">
                             @if ($photo->path)
-                                <img src="{{ asset('storage/' . $photo->path) }}" class="w-full h-full object-cover"
+                                <img src="{{ photo_asset($photo->path) }}" class="w-full h-full object-cover"
                                     alt="Photo {{ $photo->id }}" />
                             @else
                                 <span class="material-symbols-outlined text-slate-300 text-4xl">image</span>

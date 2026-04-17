@@ -17,15 +17,15 @@
 <div class="grid grid-cols-4 gap-4 mb-6">
   <div class="bg-surface-container-lowest p-6 rounded-md flex flex-col justify-between h-40 group hover:bg-primary transition-colors duration-300 cursor-pointer">
     <span class="material-symbols-outlined text-secondary text-3xl group-hover:text-secondary-fixed">school</span>
-    <div><p class="text-2xl font-headline font-bold text-primary group-hover:text-white">{{ $stats['councils'] ?? 58 }}</p><p class="text-on-surface-variant text-xs group-hover:text-slate-300">الأكاديمية</p></div>
+    <div><p class="text-2xl font-headline font-bold text-primary group-hover:text-white">{{  1   }}</p><p class="text-on-surface-variant text-xs group-hover:text-slate-300">الأكاديمية</p></div>
   </div>
   <div class="bg-surface-container-lowest p-6 rounded-md flex flex-col justify-between h-40 group hover:bg-primary transition-colors duration-300 cursor-pointer">
     <span class="material-symbols-outlined text-secondary text-3xl group-hover:text-secondary-fixed">folder_open</span>
-    <div><p class="text-2xl font-headline font-bold text-primary group-hover:text-white">{{ $stats['reports'] ?? 68 }}</p><p class="text-on-surface-variant text-xs group-hover:text-slate-300">المديريات</p></div>
+    <div><p class="text-2xl font-headline font-bold text-primary group-hover:text-white">{{ $stats['provinces'] ?? 68 }}</p><p class="text-on-surface-variant text-xs group-hover:text-slate-300">المديريات</p></div>
   </div>
   <div class="bg-surface-container-lowest p-6 rounded-md flex flex-col justify-between h-40 group hover:bg-primary transition-colors duration-300 cursor-pointer">
     <span class="material-symbols-outlined text-secondary text-3xl group-hover:text-secondary-fixed">domain</span>
-    <div><p class="text-2xl font-headline font-bold text-primary group-hover:text-white">{{ $stats['messages'] ?? 442 }}</p><p class="text-on-surface-variant text-xs group-hover:text-slate-300">المؤسسات</p></div>
+    <div><p class="text-2xl font-headline font-bold text-primary group-hover:text-white">{{ $stats['etabl'] ?? 442 }}</p><p class="text-on-surface-variant text-xs group-hover:text-slate-300">المؤسسات</p></div>
   </div>
   <div class="bg-surface-container-lowest p-6 rounded-md flex flex-col justify-between h-40 group hover:bg-primary transition-colors duration-300 cursor-pointer">
     <span class="material-symbols-outlined text-secondary text-3xl group-hover:text-secondary-fixed">bar_chart</span>
@@ -44,7 +44,7 @@
       // مصفوفة الألوان الأصلية الخاصة بك ليتم توزيعها على الأسطر
       $badgeColors = [
           ['bg' => '#ccfbf1', 'text' => '#0f766e'],
-          ['bg' => '#ede9fe', 'text' => '#6d28d9'],
+          ['bg' => '#ede9fe', 'text' => '#6d28d9'],      
           ['bg' => '#fef3c7', 'text' => '#b45309'],
           ['bg' => '#fee2e2', 'text' => '#b91c1c'],
           ['bg' => '#dcfce7', 'text' => '#166534'],

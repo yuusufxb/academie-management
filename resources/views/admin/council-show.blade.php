@@ -68,7 +68,7 @@
                 </div>
                 @if (!empty($council->tof))
                     <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-                        <img src="{{ asset('storage/' . $council->tof) }}"
+                        <img src="{{ photo_asset($council->tof) }}"
                             class="w-full object-cover max-h-80 hover:scale-[1.01] transition-transform duration-300" />
                     </div>
                 @else

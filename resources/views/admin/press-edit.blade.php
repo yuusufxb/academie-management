@@ -66,7 +66,7 @@
                     
                     @if(isset($clipping->photo))
                     <div class="mb-3">
-                        <img src="{{ asset('storage/' . $clipping->photo) }}" alt="صورة القصاصة" class="w-48 h-auto rounded-md border border-slate-200 shadow-sm object-cover inline-block"/>
+                        <img src="{{ photo_asset($clipping->photo) }}" alt="صورة القصاصة" class="w-48 h-auto rounded-md border border-slate-200 shadow-sm object-cover inline-block"/>
                         <p class="text-[10px] text-slate-400 mt-1 italic">الصورة الحالية</p>
                     </div>
                     @endif

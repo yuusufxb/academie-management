@@ -62,14 +62,15 @@
                 <span class="material-symbols-outlined text-[#10b981] text-lg">image</span>
                 <p class="font-headline text-[#0f2b26] text-sm font-black text-right">الصورة المرفقة :</p>
             </div>
-            @if(!empty($initiative->image))
+            @php $firstPhoto = $initiative->photos->first(); @endphp
+            @if($firstPhoto)
                 <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-                    <img src="{{ asset('storage/'.$initiative->image) }}" class="w-full object-cover max-h-80"/>
+                    <img src="{{ photo_asset($firstPhoto->path) }}" class="w-full object-cover max-h-80" alt="{{ $firstPhoto->name }}"/>
                 </div>
             @else
                 <div class="w-full h-44 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center">
                     <span class="material-symbols-outlined text-slate-300 text-5xl mb-2">image_not_supported</span>
-                    <span class="text-slate-400 text-xs font-bold font-headline">لا توجد صورة متوفرة</span>
+                    <span class="text-slate-400 text-xs font-bold font-headline">لا توجد صور متوفرة</span>
                 </div>
             @endif
         </div>

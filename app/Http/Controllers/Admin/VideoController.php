@@ -4,25 +4,46 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Media; 
+use App\Models\Activity;
+use App\Models\Media;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class VideoController extends Controller
 {
     /**
      * عرض قائمة الفيديوهات
+     * niv 2,3,5,6 : catalogue global (sans filtre activité)
      */
     public function index()
     {
-        $videos = Media::latest('id')->paginate(10);
+        $user = Auth::user();
+        $query = Media::with('activity');
+
+        if ($user && $user->hasAnyLevel(
+            User::LEVEL_SUPERVISOR,
+            User::LEVEL_DIRECTOR,
+            User::LEVEL_PROVINCIAL_ADMIN,
+            User::LEVEL_ACADEMY_ADMIN
+        )) {
+            $videos = $query->latest('id')->paginate(10);
+        } else {
+            $videos = $query->visibleToUser($user)->latest('id')->paginate(10);
+        }
+
         return view('admin.videos', compact('videos'));
     }
 
     /**
      * عرض صفحة إضافة فيديو جديد
+     * niv 3 et 6 : toutes les activités
      */
     public function create()
     {
-        return view('admin.video-form');
+        abort_unless(Auth::user() && Auth::user()->canManageMedia(), 403);
+        $activities = Activity::query()->orderByDesc('dte')->get();
+
+        return view('admin.video-form', compact('activities'));
     }
 
     /**
@@ -30,19 +51,20 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. التحقق من البيانات (تم تعديل tof ليكون نصاً و typ ليقبل الأرقام القادمة من الفورم)
+        abort_unless(Auth::user() && Auth::user()->canManageMedia(), 403);
+
         $data = $request->validate([
             'typ'   => 'required',
             'title' => 'required|string|max:255',
             'link'  => 'required|string',
-            'tof'   => 'nullable|string', // تم تغييره من image إلى string ليصبح "المعرف"
+            'tof'   => 'nullable|string',
+            'idact' => 'required|exists:activities,id',
         ]);
 
-        // 2. إنشاء السجل في قاعدة البيانات
+        Activity::query()->findOrFail($data['idact']);
+
         Media::create($data);
 
-        // 3. التوجه لصفحة الجدول مع رسالة نجاح
-        // ملاحظة: تأكد أن اسم المسار هو 'admin.videos' في ملف web.php
         return redirect()->route('admin.videos')->with('success', 'تمت إضافة الفيديو بنجاح');
     }
 
@@ -51,7 +73,20 @@ class VideoController extends Controller
      */
     public function show($id)
     {
-        $video = Media::findOrFail($id);
+        $user = Auth::user();
+        $base = Media::with('activity');
+
+        if ($user && $user->hasAnyLevel(
+            User::LEVEL_SUPERVISOR,
+            User::LEVEL_DIRECTOR,
+            User::LEVEL_PROVINCIAL_ADMIN,
+            User::LEVEL_ACADEMY_ADMIN
+        )) {
+            $video = $base->findOrFail($id);
+        } else {
+            $video = $base->visibleToUser($user)->findOrFail($id);
+        }
+
         return view('admin.video-show', compact('video'));
     }
 
@@ -60,8 +95,11 @@ class VideoController extends Controller
      */
     public function edit($id)
     {
-        $video = Media::findOrFail($id);
-        return view('admin.video-form', compact('video'));
+        abort_unless(Auth::user() && Auth::user()->canManageMedia(), 403);
+        $video = Media::with('activity')->findOrFail($id);
+        $activities = Activity::query()->orderByDesc('dte')->get();
+
+        return view('admin.video-form', compact('video', 'activities'));
     }
 
     /**
@@ -69,17 +107,19 @@ class VideoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        abort_unless(Auth::user() && Auth::user()->canManageMedia(), 403);
         $video = Media::findOrFail($id);
 
-        // 1. التحقق من البيانات
         $data = $request->validate([
             'typ'   => 'required',
             'title' => 'required|string|max:255',
             'link'  => 'required|string',
-            'tof'   => 'nullable|string', // تم التعديل ليتوافق مع "المعرف"
+            'tof'   => 'nullable|string',
+            'idact' => 'required|exists:activities,id',
         ]);
 
-        // 2. تحديث السجل
+        Activity::query()->findOrFail($data['idact']);
+
         $video->update($data);
 
         return redirect()->route('admin.videos')->with('success', 'تم تحديث البيانات بنجاح');
@@ -90,7 +130,10 @@ class VideoController extends Controller
      */
     public function destroy($id)
     {
+        abort_unless(Auth::user() && Auth::user()->canManageMedia(), 403);
         Media::findOrFail($id)->delete();
+
         return back()->with('success', 'تم الحذف بنجاح');
     }
+
 }

@@ -72,10 +72,23 @@
                     
                     @if($council->tof)
                     <div class="relative w-48 group">
-                        <img src="{{ asset('storage/' . $council->tof) }}" class="w-48 h-32 object-cover rounded-xl border border-slate-200 shadow-sm"/>
+                        <img src="{{ photo_asset($council->tof) }}" class="w-48 h-32 object-cover rounded-xl border border-slate-200 shadow-sm"/>
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
                             <span class="text-white text-[10px] font-bold">الصورة الحالية</span>
                         </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            name="remove_tof"
+                            id="remove_tof"
+                            value="1"
+                            class="w-4 h-4 rounded border border-slate-300 text-[#10b981] focus:ring-[#10b981]/30"
+                        />
+                        <label for="remove_tof" class="text-xs font-bold text-slate-600 cursor-pointer">
+                            إزالة الصورة (بدون استبدال)
+                        </label>
                     </div>
                     @endif
                     

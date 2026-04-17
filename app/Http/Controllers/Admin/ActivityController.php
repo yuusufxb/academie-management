@@ -4,28 +4,29 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Activity; 
+use App\Models\Activity;
+use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
     public function index(Request $request)
 {
-    // جلب الفئات ضروري جداً لكي لا تفرغ القائمة بعد البحث
-    $categories = \App\Models\Catigory::all(); 
+    $categories = \App\Models\Catigory::all();
+    $user = Auth::user();
 
-    $query = \App\Models\Activity::query();
+    $query = \App\Models\Activity::query()->visibleToUser($user);
 
     if ($request->filled('q')) {
         $query->where('title', 'LIKE', "%{$request->q}%");
     }
 
     if ($request->filled('typ')) {
-        $query->where('typ', $request->typ);
+        // Cast to integer to avoid string/int mismatch
+        $query->where('typ', (int) $request->typ);
     }
 
     $activities = $query->orderBy('dte', 'desc')->paginate(10);
 
-    // نرسل نفس المتغيرات التي يحتاجها التصميم ليبقى ثابتاً
     return view('admin.activities.index', compact('activities', 'categories'));
 }
 
@@ -38,23 +39,37 @@ class ActivityController extends Controller
 
 public function store(Request $request)
 {
-    // التحقق من البيانات باستخدام أسماء الأعمدة الحقيقية في جدولك
     $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'typ'   => 'required', // العمود المسؤول عن نوع النشاط
-        'dte'   => 'required|date',
-        'hr'    => 'nullable',
-        'lieu'  => 'required|string|max:255',
-        'resp'  => 'required|string|max:255',
-        'benfs' => 'nullable|string|max:255',
-        'nb'    => 'nullable|integer',
-        'ref'   => 'nullable|string|max:255',
+        'title'     => 'required|string|max:255',
+        'typ'       => 'required',
+        'dte'       => 'required|date',
+        'hr'        => 'nullable',
+        'lieu'      => 'required|string|max:255',
+        'resp'      => 'required|string|max:255',
+        'benfs'     => 'nullable|string|max:255',
+        'nb'        => 'nullable|integer',
+        'ref'       => 'nullable|string|max:255',
+        'photos'    => 'nullable|array|max:6',
+        'photos.*'  => 'image|mimes:jpeg,png,jpg,webp|max:4096',
     ]);
-    $data['gre'] = 1;
-    $data['niv'] = 1;
 
-    // حفظ النشاط
-    \App\Models\Activity::create($data);
+    $user = Auth::user();
+    $data['gre'] = $user->gre;
+    $data['niv'] = $user->niv;
+
+    $activity = \App\Models\Activity::create($data);
+
+    // Save photos
+    if ($request->hasFile('photos')) {
+        foreach ($request->file('photos') as $photo) {
+            $path = $photo->store('activities', 'public');
+            \App\Models\Photo::create([
+                'name'  => $photo->getClientOriginalName(),
+                'path'  => $path,
+                'idact' => $activity->id,
+            ]);
+        }
+    }
 
     return redirect()->route('admin.activities.index')
         ->with('success', 'تم إضافة النشاط بنجاح.');
@@ -64,57 +79,110 @@ public function store(Request $request)
 {
     // جلب النشاط مع الفئة لضمان ظهور النوع في الأعلى اليسار
     $activity = \App\Models\Activity::with('catigory')->findOrFail($id);
+    $this->authorizeActivity($activity);
     
     return view('admin.activities.show', compact('activity'));
 }
 
     public function edit($id)
 {
-    // جلب النشاط من قاعدة البيانات
-    $activity = \App\Models\Activity::findOrFail($id);
-    
-    // جلب جميع الفئات لعرضها في قائمة "نوع النشاط"
-    $categories = \App\Models\Catigory::all(); 
-
+    $activity   = \App\Models\Activity::with('photos')->findOrFail($id);
+    $this->authorizeActivity($activity);
+    $categories = \App\Models\Catigory::all();
     return view('admin.activities.edit', compact('activity', 'categories'));
 }
 
 public function update(Request $request, $id)
 {
-    $activity = \App\Models\Activity::findOrFail($id);
+    $activity = \App\Models\Activity::with('photos')->findOrFail($id);
+    $this->authorizeActivity($activity);
 
-    // التحقق من صحة البيانات باستخدام أسماء أعمدة قاعدة بياناتك الحقيقية
     $data = $request->validate([
-        'title' => 'required|string|max:255',
-        'typ'   => 'required', // رقم الفئة
-        'dte'   => 'required|date',
-        'hr'    => 'nullable',
-        'lieu'  => 'required|string|max:255',
-        'resp'  => 'required|string|max:255',
-        'benfs' => 'nullable|string|max:255',
-        'nb'    => 'nullable|integer',
-        'ref'   => 'nullable|string|max:255',
+        'title'     => 'required|string|max:255',
+        'typ'       => 'required',
+        'dte'       => 'required|date',
+        'hr'        => 'nullable',
+        'lieu'      => 'required|string|max:255',
+        'resp'      => 'required|string|max:255',
+        'benfs'     => 'nullable|string|max:255',
+        'nb'        => 'nullable|integer',
+        'ref'       => 'nullable|string|max:255',
+        'photos'    => 'nullable|array',
+        'photos.*'  => 'image|mimes:jpeg,png,jpg,webp|max:4096',
+        'remove_photos' => 'nullable|array',
     ]);
 
-    // تحديث البيانات في قاعدة البيانات
     $activity->update($data);
 
-    return redirect()->route('admin.activities.index')
+    // Delete photos marked for removal
+    if ($request->filled('remove_photos')) {
+        foreach ($request->remove_photos as $photoId) {
+            $photo = \App\Models\Photo::find($photoId);
+            if ($photo && $photo->idact == $activity->id) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($photo->path);
+                $photo->delete();
+            }
+        }
+    }
+
+    // Count remaining photos after deletion
+    $existingCount = $activity->photos()->count();
+
+    // Add new photos (respect max 6)
+    if ($request->hasFile('photos')) {
+        $allowed = 6 - $existingCount;
+        foreach (array_slice($request->file('photos'), 0, $allowed) as $photo) {
+            $path = $photo->store('activities', 'public');
+            \App\Models\Photo::create([
+                'name'  => $photo->getClientOriginalName(),
+                'path'  => $path,
+                'idact' => $activity->id,
+            ]);
+        }
+    }
+
+    return redirect()->route('admin.activities.edit', $activity->id)
         ->with('success', 'تم تحديث النشاط بنجاح.');
 }
 
-    public function destroy($id)
+public function destroy($id)
 {
-    // 1. البحث عن النشاط في قاعدة البيانات
-    $activity = \App\Models\Activity::findOrFail($id);
+    $activity = \App\Models\Activity::with('photos')->findOrFail($id);
+    $this->authorizeActivity($activity);
 
-    // 2. حذف النشاط فعلياً
+    // Delete all photo files from storage
+    foreach ($activity->photos as $photo) {
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($photo->path);
+        $photo->delete();
+    }
+
     $activity->delete();
 
-    // 3. إعادة التوجيه مع رسالة النجاح
     return redirect()->route('admin.activities.index')
         ->with('success', 'تم حذف النشاط بنجاح.');
 }
 
+private function applyActivityScope($query, $user): void
+{
+    $query->visibleToUser($user);
+}
+
+private function authorizeActivity(Activity $activity): void
+{
+    $user = Auth::user();
+
+    if (!$user) {
+        abort(403, 'غير مصرح لك بالوصول.');
+    }
+
+    $allowed = Activity::query()
+        ->visibleToUser($user)
+        ->whereKey($activity->getKey())
+        ->exists();
+
+    if (!$allowed) {
+        abort(403, 'ليس لديك الصلاحية للوصول إلى هذا النشاط.');
+    }
+}
    
 }

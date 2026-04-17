@@ -12,17 +12,33 @@ class PublicController extends Controller
 {
    public function home()
 {
-    // 1. إحصائيات الأنشطة
+    // 1. إحصائيات الأنشطة من جدول Activity
     $totalActivities = Activity::count();
-    $schoolsCount = Activity::distinct('lieu')->count(); // حساب عدد المؤسسات بناءً على مكان النشاط
     
-    // 2. جلب آخر 3 أنشطة للوحة التتبع الصغيرة
-    $recent_activities = Activity::latest()->take(3)->get();
+    // 2. إحصائيات المؤسسات من جدول Etabz (البيانات الحقيقية)
+    $schoolsCount = \App\Models\Etabz::count(); 
+    
+    // 3. إحصائيات المديريات من جدول ZProv
+    $provincesCount = \App\Models\ZProv::count();
 
-    // 3. جلب آخر 3 دورات للمجلس الإداري
+    // 4. جلب آخر 3 أنشطة للوحة التتبع الصغيرة
+    $recent_activities = Activity::with('catigory')->latest()->take(3)->get();
+
+    // 5. جلب آخر 3 دورات للمجلس الإداري
     $councils = CAdmin::latest()->take(3)->get();
 
-    return view('public.home', compact('totalActivities', 'schoolsCount', 'recent_activities', 'councils'));
+    // 6. حساب نسبة المصادقة (مثال: الأنشطة التي حالتها "مقبول")
+    // $approvedActivities = Activity::where('etat', 'مقبول')->count();
+    // $validationRate = $totalActivities > 0 ? round(($approvedActivities / $totalActivities) * 100) : 0;
+
+    return view('public.home', compact(
+        'totalActivities', 
+        'schoolsCount', 
+        'provincesCount', 
+        'recent_activities', 
+        'councils',
+        // 'validationRate'
+    ));
 }
 
     // ================= ACTIVITIES =================
@@ -103,14 +119,43 @@ class PublicController extends Controller
 
     // ================= OTHER =================
     public function media()
-    {
-        // (Optionnel) Si tu veux envoyer les données de ta table 'media' vers la vue plus tard :
-        // $medias = \App\Models\Media::latest()->paginate(12);
-        // return view('public.media', compact('medias'));
-        $medias = \App\Models\Media::latest()->paginate(10);
-        $sidebarMedias = \App\Models\Media::latest()->take(3)->get();
-        return view('public.media', compact('medias', 'sidebarMedias'));
-    }
+{
+    $allMedia = \App\Models\Media::latest()->get();
+
+    // Use typ instead of fragile string matching on link.
+    // typ: 1 = YouTube, 2 = Facebook, (3 = other not shown here)
+    $videosCollection = $allMedia->filter(function ($item) {
+        return (int) $item->typ === 1;
+    });
+
+    $facebookCollection = $allMedia->filter(function ($item) {
+        return (int) $item->typ === 2;
+    });
+
+    // Paginate YouTube
+    $ytPage   = request()->get('yt_page', 1);
+    $ytPer    = 6;
+    $videos   = new \Illuminate\Pagination\LengthAwarePaginator(
+        $videosCollection->forPage($ytPage, $ytPer)->values(),
+        $videosCollection->count(),
+        $ytPer,
+        $ytPage,
+        ['path' => request()->url(), 'pageName' => 'yt_page']
+    );
+
+    // Paginate Facebook
+    $fbPage   = request()->get('fb_page', 1);
+    $fbPer    = 4;
+    $facebook = new \Illuminate\Pagination\LengthAwarePaginator(
+        $facebookCollection->forPage($fbPage, $fbPer)->values(),
+        $facebookCollection->count(),
+        $fbPer,
+        $fbPage,
+        ['path' => request()->url(), 'pageName' => 'fb_page']
+    );
+
+    return view('public.media', compact('videos', 'facebook'));
+}
     public function stars()
 {
     // جلب المبادرات المتميزة مع الصور

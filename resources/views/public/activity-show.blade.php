@@ -94,7 +94,7 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 px-2">
                         @forelse($activity->photos as $photo)
                             <div class="rounded-2xl overflow-hidden aspect-square bg-slate-100 border border-slate-200 group cursor-pointer shadow-sm hover:shadow-md transition-shadow">
-                                <img src="{{ asset('storage/' . $photo->path) }}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="Activity Photo"/>
+                                <img src="{{ photo_asset($photo->path) }}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="Activity Photo"/>
                             </div>
                         @empty
                             @foreach(range(1,4) as $i)
@@ -116,7 +116,7 @@
                         @php $mainPhoto = $activity->mainPhoto ?? $activity->photos->first(); @endphp
                         @if($mainPhoto)
                             <div class="rounded-2xl overflow-hidden border-2 border-slate-100 group shadow-lg hover:border-[#10b981]/40 transition-all">
-                                <img src="{{ asset('storage/'.$mainPhoto->path) }}" class="w-full object-cover transition-all group-hover:scale-[1.01]"/>
+                                <img src="{{ photo_asset($mainPhoto->path) }}" class="w-full object-cover transition-all group-hover:scale-[1.01]"/>
                             </div>
                         @else
                             <div class="w-full h-56 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center hover:border-[#10b981]/20 transition-all">

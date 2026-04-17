@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = ['idact', 'title', 'byu', 'rap', 'vu'];
+
+    public function photos()
+    {
+        return $this->hasMany(InitiativePhoto::class, 'idrep');
+    }
     public function activity()
 {
     return $this->belongsTo(Activity::class, 'idact');

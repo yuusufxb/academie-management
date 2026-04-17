@@ -62,14 +62,24 @@
 
                 {{-- Action buttons --}}
                 <div class="px-5 py-3 border-b border-slate-100 flex gap-2 justify-start flex-wrap bg-slate-50/30">
-                    <a href="{{ route('admin.users.edit', $user->id) }}"
-                        class="px-4 py-1.5 bg-[#10b981] text-white rounded-lg text-xs font-black hover:opacity-90 transition-all">تعديل</a>
-                    <button
-                        class="px-4 py-1.5 bg-[#0f2b26] text-white rounded-lg text-xs font-black hover:opacity-90 transition-all">إعادة
-                        تعيين كلمة المرور</button>
-                    <button
-                        class="px-4 py-1.5 border border-slate-200 text-slate-700 rounded-lg text-xs font-black hover:bg-white transition-all">إرسال
-                        بيانات الدخول</button>
+                    @if(auth()->user()->canEditUsers())
+                        <a href="{{ route('admin.users.edit', $user->id) }}"
+                            class="px-4 py-1.5 bg-[#10b981] text-white rounded-lg text-xs font-black hover:opacity-90 transition-all">تعديل</a>
+                    @endif
+                    @if(auth()->user()->canFullyManageUsers())
+                        <form method="POST" action="{{ route('admin.users.reset-password', $user->id) }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="px-4 py-1.5 bg-[#0f2b26] text-white rounded-lg text-xs font-black hover:opacity-90 transition-all">إعادة
+                                تعيين كلمة المرور</button>
+                        </form>
+                        <form method="POST" action="{{ route('admin.users.send-credentials', $user->id) }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="px-4 py-1.5 border border-slate-200 text-slate-700 rounded-lg text-xs font-black hover:bg-white transition-all">إرسال
+                                بيانات الدخول</button>
+                        </form>
+                    @endif
                 </div>
 
                 <div class="divide-y divide-slate-50">

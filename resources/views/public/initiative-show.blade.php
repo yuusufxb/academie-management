@@ -78,7 +78,7 @@
                     <div class="px-2">
                         @if($initiative->tof)
                             <div class="rounded-2xl overflow-hidden border-2 border-slate-100 group shadow-lg hover:border-[#10b981]/40 transition-all">
-                                <img src="{{ asset('storage/'.$initiative->tof) }}" class="w-full h-auto object-cover" alt="{{ $initiative->title }}"/>
+                                <img src="{{ photo_asset($initiative->tof) }}" class="w-full h-auto object-cover" alt="{{ $initiative->title }}"/>
                             </div>
                         @else
                             <div class="bg-slate-50 border border-slate-100 rounded-2xl p-8 flex flex-col items-center">

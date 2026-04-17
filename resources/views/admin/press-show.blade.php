@@ -68,7 +68,7 @@
     @if($clipping->photo)
     <div class="px-5 py-5 border-t border-slate-100 text-right">
         <p class="font-headline text-[#0f2b26] text-sm font-black text-right mb-3">صورة القصاصة :</p>
-        <img src="{{ asset('storage/' . $clipping->photo) }}" class="max-w-full h-auto rounded-md shadow-sm border border-slate-100">
+        <img src="{{ photo_asset($clipping->photo) }}" class="max-w-full h-auto rounded-md shadow-sm border border-slate-100">
     </div>
     @endif
 

@@ -21,10 +21,11 @@
         <div class="w-full bg-white/10 rounded-lg p-4 backdrop-blur-sm">
           <p class="text-white/60 text-xs font-label mb-2">لوحة التتبع المحسّنة</p>
           <div class="grid grid-cols-2 gap-2">
-            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">{{ $totalActivities }}</p><p class="text-white/50 text-xs">مجموع الأنشطة</p></div>
-            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">{{ $schoolsCount }}</p><p class="text-white/50 text-xs">المؤسسات</p></div>
-            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">06</p><p class="text-white/50 text-xs">المديريات</p></div>
-            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">91%</p><p class="text-white/50 text-xs">نسبة المصادقة</p></div>
+            {{-- الترتيب حسب الصورة --}}
+            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">{{ sprintf('%02d', $provincesCount) }}</p><p class="text-white/50 text-xs">المديريات</p></div>
+            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">{{ number_format($schoolsCount) }}</p><p class="text-white/50 text-xs">المؤسسات</p></div>
+            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">{{ number_format($totalActivities) }}</p><p class="text-white/50 text-xs">مجموع الأنشطة</p></div>
+            <div class="bg-white/15 rounded-md p-3"><p class="text-emerald-300 font-headline font-black text-2xl">01</p><p class="text-white/50 text-xs">الأكاديمية الجهوية</p></div>
           </div>
         </div>
         <div class="w-full space-y-2">
@@ -48,7 +49,6 @@
   <div class="max-w-7xl mx-auto">
     <div class="flex justify-between items-end mb-12">
       <div><span class="text-secondary font-label font-bold tracking-widest uppercase text-xs">نظرة إحصائية</span><h2 class="font-headline text-primary text-3xl font-bold mt-2">الأثر بالأرقام</h2></div>
-      
     </div>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
@@ -57,15 +57,15 @@
       </div>
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-secondary text-4xl group-hover:text-secondary-fixed">account_balance</span>
-        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">06</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المديريات الإقليمية</p></div>
+        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">{{ sprintf('%02d', $provincesCount) }}</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المديريات الإقليمية</p></div>
       </div>
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-secondary text-4xl group-hover:text-secondary-fixed">domain</span>
-        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">{{ $schoolsCount }}</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المؤسسات التعليمية</p></div>
+        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">{{ number_format($schoolsCount) }}</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">المؤسسات التعليمية</p></div>
       </div>
       <div class="bg-surface-container-lowest p-8 rounded-md flex flex-col justify-between h-48 group hover:bg-primary transition-colors duration-300 cursor-pointer">
         <span class="material-symbols-outlined text-secondary text-4xl group-hover:text-secondary-fixed">task_alt</span>
-        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">{{ $totalActivities }}</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">مجموع الأنشطة</p></div>
+        <div><p class="text-3xl font-headline font-bold text-primary group-hover:text-white">{{ number_format($totalActivities) }}</p><p class="text-on-surface-variant text-sm group-hover:text-slate-300">مجموع الأنشطة</p></div>
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@
     <div onclick="window.location='{{ route('council.show', $council->id) }}'" class="bg-surface-container-lowest rounded-md overflow-hidden group cursor-pointer border border-transparent hover:border-slate-200 transition-all">
       <div class="h-48 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
         @if($council->tof)
-          <img src="{{ asset('storage/' . $council->tof) }}" class="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity">
+          <img src="{{ photo_asset($council->tof) }}" class="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity">
         @else
           <span class="material-symbols-outlined text-emerald-400 text-6xl">gavel</span>
         @endif

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('stars', function (Blueprint $table) {
     $table->id();
-    $table->foreignId('idact')->nullable()->constrained('activities')->onDelete('cascade');
+    $table->foreignId('idact')->nullable()->constrained('activities')->onDelete('cascade'); 
     $table->integer('typ');
     $table->string('title');
     $table->text('infos');

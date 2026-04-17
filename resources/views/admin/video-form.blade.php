@@ -60,6 +60,19 @@
                     
                 </div>
 
+                {{-- النشاط المرتبط --}}
+                <div>
+                    <label class="block text-slate-700 text-sm font-bold mb-2 text-right">النشاط المرتبط</label>
+                    <select name="idact" class="form-ctrl" required>
+                        <option value="">اختر النشاط</option>
+                        @foreach (($activities ?? []) as $activity)
+                            <option value="{{ $activity->id }}" {{ (string) old('idact', $video->idact ?? '') === (string) $activity->id ? 'selected' : '' }}>
+                                #{{ $activity->id }} - {{ $activity->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
 
 
                 <div class="flex justify-end pt-2 border-t border-slate-100">
